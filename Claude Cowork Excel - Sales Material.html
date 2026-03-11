@@ -226,13 +226,25 @@
   /* ============ EXCEL + SIDEBAR MOCKUP ============ */
   .mockup-container {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 1fr 340px;
     gap: 0;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 24px rgba(0,0,0,0.1);
     margin-bottom: 40px;
     border: 1px solid var(--excel-grid);
+  }
+  .mockup-container.stacked {
+    grid-template-columns: 1fr;
+  }
+  .mockup-container.stacked .claude-sidebar {
+    border-left: none;
+    border-top: 1px solid var(--sidebar-border);
+    max-height: none;
+  }
+  .mockup-container.stacked .sidebar-chat {
+    max-height: 360px;
+    overflow-y: auto;
   }
 
   .excel-panel { background: var(--white); }
@@ -305,9 +317,11 @@
     position: sticky;
     top: 0;
   }
-  .excel-grid th.col-header { background: #E8E8E8; min-width: 80px; }
-  .excel-grid th.row-num { background: #F0F0F0; width: 32px; min-width: 32px; color: var(--ink-muted); font-weight: 500; }
-  .excel-grid td { border: 1px solid #E0E0E0; padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+  .excel-grid th.col-header { background: #E8E8E8; min-width: 70px; }
+  .excel-grid th.row-num { background: #F0F0F0; width: 30px; min-width: 30px; color: var(--ink-muted); font-weight: 500; }
+  .excel-grid td { border: 1px solid #E0E0E0; padding: 4px 6px; font-size: 12px; white-space: nowrap; }
+  .mockup-container.stacked .excel-grid th.col-header { min-width: 60px; }
+  .mockup-container.stacked .excel-grid td { padding: 4px 6px; }
   .excel-grid tr.header-row td { background: var(--excel-header); font-weight: 700; color: var(--ink); font-size: 11px; }
 
   .cell-error { background: #FDE8E8; color: var(--danger); }
@@ -1070,7 +1084,7 @@
     <p><span class="en">A sales analyst needs to calculate net revenue that handles both promotional and regular pricing, build a running total, rank products by performance, and apply conditional formatting&mdash;all without memorizing complex Excel syntax.</span><span class="th">นักวิเคราะห์ยอดขายต้องคำนวณรายได้สุทธิที่รองรับทั้งราคาโปรโมชันและราคาปกติ สร้างยอดรวมสะสม จัดอันดับสินค้าตามผลงาน และใส่การจัดรูปแบบตามเงื่อนไข ทั้งหมดนี้โดยไม่ต้องจำสูตร Excel ที่ซับซ้อน</span></p>
   </div>
 
-  <div class="mockup-container">
+  <div class="mockup-container stacked">
     <div class="excel-panel">
       <div class="excel-titlebar">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -1216,7 +1230,7 @@
     <p><span class="en">A retail store manages 500 SKUs. Every morning, someone manually scrolls through the stock report looking for items running low. This takes 20&ndash;30 minutes, is error-prone, and sometimes critical reorders get missed, leading to stockouts that cost the business thousands in lost sales.</span><span class="th">ร้านค้าปลีกจัดการสินค้า 500 รายการ ทุกเช้ามีคนต้องเลื่อนดูรายงานสต็อกเพื่อหาสินค้าที่ใกล้หมด ใช้เวลา 20&ndash;30 นาที มีโอกาสพลาดสูง บางครั้งสินค้าที่ต้องสั่งซื้อด่วนถูกมองข้าม ทำให้เกิดสินค้าขาดสต็อก สูญเสียยอดขายหลายพันบาท</span></p>
   </div>
 
-  <div class="mockup-container">
+  <div class="mockup-container stacked">
     <div class="excel-panel">
       <div class="excel-titlebar">
         <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
