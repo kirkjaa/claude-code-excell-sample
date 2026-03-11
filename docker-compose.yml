@@ -6,7 +6,7 @@ services:
       - "4008:80"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      test: ["CMD-SHELL", "nginx -t || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
