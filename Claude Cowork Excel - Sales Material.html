@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Cowork for Excel — Retail Intelligence in Action</title>
+<style>
+  :root {
+    --terra: #D97757;
+    --terra-light: #E8956F;
+    --terra-dark: #B85E3F;
+    --beige: #FAF6F1;
+    --beige-mid: #F0E8DF;
+    --beige-dark: #E0D5C8;
+    --ink: #1E1E2A;
+    --ink-light: #4A4A5A;
+    --ink-muted: #8A8A9A;
+    --white: #FFFFFF;
+    --success: #2E7D4F;
+    --success-bg: #E8F5E9;
+    --warning: #E67E22;
+    --warning-bg: #FFF8E1;
+    --danger: #C0392B;
+    --danger-bg: #FDEDEC;
+    --excel-green: #217346;
+    --excel-header: #E2EFDA;
+    --excel-grid: #D4D4D4;
+    --claude-bg: #F9F5F1;
+    --sidebar-border: #E8DDD0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--beige);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body.lang-th { font-family: 'Sarabun', 'Noto Sans Thai', 'Segoe UI', sans-serif; }
+
+  /* ============ LANGUAGE TOGGLE ============ */
+  body.lang-en .th { display: none !important; }
+  body.lang-th .en { display: none !important; }
+
+  .lang-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    background: rgba(30,30,42,0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .lang-btn {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.25s;
+    letter-spacing: 0.5px;
+  }
+  .lang-btn.active {
+    background: var(--terra);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(217,119,87,0.4);
+  }
+  .lang-btn:hover:not(.active) { color: rgba(255,255,255,0.9); }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: linear-gradient(135deg, var(--ink) 0%, #2A2A3E 50%, #3A2A2E 100%);
+    color: var(--white);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,87,0.15) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(217,119,87,0.2);
+    border: 1px solid rgba(217,119,87,0.4);
+    color: var(--terra-light);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 800px;
+    margin: 0 auto 20px;
+  }
+  .hero h1 span { color: var(--terra-light); }
+  .hero p {
+    font-size: 20px;
+    color: rgba(255,255,255,0.75);
+    max-width: 640px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+  }
+  .hero-cta {
+    display: inline-block;
+    background: var(--terra);
+    color: var(--white);
+    padding: 14px 36px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .hero-cta:hover { background: var(--terra-light); transform: translateY(-1px); }
+
+  /* ============ ROI BAR ============ */
+  .roi-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    max-width: 1100px;
+    margin: -40px auto 0;
+    position: relative;
+    z-index: 10;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .roi-card {
+    background: var(--white);
+    padding: 32px 24px;
+    text-align: center;
+    border-right: 1px solid var(--beige-mid);
+  }
+  .roi-card:last-child { border-right: none; }
+  .roi-number {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--terra);
+    line-height: 1.1;
+  }
+  .roi-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 6px;
+  }
+
+  /* ============ SECTION WRAPPER ============ */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--terra);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .section-header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .section-header p {
+    font-size: 18px;
+    color: var(--ink-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ============ TIME SAVINGS PILL ============ */
+  .time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--success-bg);
+    border: 1px solid #A5D6A7;
+    color: var(--success);
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+  .time-pill .clock { font-size: 16px; }
+
+  /* ============ EXCEL + SIDEBAR MOCKUP ============ */
+  .mockup-container {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    border: 1px solid var(--excel-grid);
+  }
+
+  .excel-panel { background: var(--white); }
+  .excel-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--excel-green);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .excel-titlebar .dots { display: flex; gap: 5px; }
+  .excel-titlebar .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+  }
+  .excel-ribbon {
+    display: flex;
+    padding: 0;
+    background: #F3F3F3;
+    border-bottom: 1px solid var(--excel-grid);
+    font-size: 12px;
+  }
+  .ribbon-tab {
+    padding: 8px 16px;
+    color: var(--ink-light);
+    cursor: default;
+    border-bottom: 2px solid transparent;
+  }
+  .ribbon-tab.active {
+    color: var(--excel-green);
+    border-bottom: 2px solid var(--excel-green);
+    font-weight: 600;
+  }
+  .formula-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    background: var(--white);
+    border-bottom: 1px solid var(--excel-grid);
+    font-size: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+  }
+  .formula-bar .cell-ref {
+    background: #F0F0F0;
+    padding: 2px 8px;
+    border: 1px solid var(--excel-grid);
+    margin-right: 8px;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: center;
+    font-size: 11px;
+  }
+  .formula-bar .fx { color: var(--ink-muted); margin-right: 8px; font-style: italic; }
+  .formula-bar .formula-text { color: var(--ink); }
+
+  .excel-grid { width: 100%; overflow-x: auto; }
+  .excel-grid table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .excel-grid th {
+    background: #F8F8F8;
+    border: 1px solid var(--excel-grid);
+    padding: 4px 10px;
+    font-weight: 600;
+    color: var(--ink-light);
+    text-align: center;
+    font-size: 11px;
+    position: sticky;
+    top: 0;
+  }
+  .excel-grid th.col-header { background: #E8E8E8; min-width: 80px; }
+  .excel-grid th.row-num { background: #F0F0F0; width: 32px; min-width: 32px; color: var(--ink-muted); font-weight: 500; }
+  .excel-grid td { border: 1px solid #E0E0E0; padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+  .excel-grid tr.header-row td { background: var(--excel-header); font-weight: 700; color: var(--ink); font-size: 11px; }
+
+  .cell-error { background: #FDE8E8; color: var(--danger); }
+  .cell-warning { background: #FFF3CD; }
+  .cell-fixed { background: #D4EDDA; color: var(--success); font-weight: 600; }
+  .cell-blank { background: #FFF0F0; }
+  .cell-duplicate { background: #FCE4EC; }
+  .cell-formula { background: #E3F2FD; font-family: 'Consolas', monospace; font-size: 11px; }
+  .cell-highlight { background: #E8F5E9; }
+
+  .status-reorder, .status-low, .status-ok {
+    display: inline-block;
+    color: var(--white);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .status-reorder { background: var(--danger); }
+  .status-low { background: var(--warning); }
+  .status-ok { background: var(--success); }
+
+  .row-danger td { background: #FDEDEC !important; }
+  .row-warning td { background: #FFF8E1 !important; }
+  .row-ok td { background: #E8F5E9 !important; }
+
+  .claude-sidebar {
+    background: var(--claude-bg);
+    border-left: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--white);
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  .claude-logo {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--terra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .sidebar-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .sidebar-subtitle { font-size: 11px; color: var(--ink-muted); }
+  .sidebar-chat {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .chat-msg { max-width: 95%; font-size: 12.5px; line-height: 1.55; }
+  .chat-msg.user {
+    align-self: flex-end;
+    background: var(--terra);
+    color: var(--white);
+    padding: 10px 14px;
+    border-radius: 14px 14px 4px 14px;
+  }
+  .chat-msg.claude {
+    align-self: flex-start;
+    background: var(--white);
+    color: var(--ink);
+    padding: 12px 14px;
+    border-radius: 14px 14px 14px 4px;
+    border: 1px solid var(--sidebar-border);
+  }
+  .chat-msg.claude .label {
+    font-size: 10px; font-weight: 700; color: var(--terra);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
+  }
+  .chat-msg.claude code {
+    display: block;
+    background: #F5F0EB;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11.5px;
+    margin: 8px 0;
+    color: var(--terra-dark);
+    overflow-x: auto;
+  }
+  .chat-msg.claude .cell-cite {
+    display: inline;
+    background: #EDE7E0;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: var(--terra-dark);
+    font-weight: 600;
+  }
+  .chat-msg.claude ul { margin: 6px 0 2px 16px; font-size: 12px; }
+  .chat-msg.claude li { margin-bottom: 4px; }
+  .chat-msg.claude strong { color: var(--ink); }
+
+  .sidebar-input { padding: 12px 16px; border-top: 1px solid var(--sidebar-border); background: var(--white); }
+  .input-fake {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--beige-dark);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+  .input-fake .send-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--terra);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .input-fake .send-btn::after {
+    content: '';
+    width: 0; height: 0;
+    border-left: 7px solid var(--white);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    margin-left: 2px;
+  }
+
+  .workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .workflow-step {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .workflow-step::before {
+    content: attr(data-step);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--terra);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .workflow-step h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .workflow-step p { font-size: 13px; color: var(--ink-light); line-height: 1.5; }
+
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: start;
+    margin: 32px 0;
+  }
+  .ba-panel {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--beige-dark);
+  }
+  .ba-label {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  .ba-label.before { background: var(--danger-bg); color: var(--danger); }
+  .ba-label.after { background: var(--success-bg); color: var(--success); }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--terra);
+    padding-top: 60px;
+    font-weight: 300;
+  }
+  .ba-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ba-table th {
+    background: #F5F5F5;
+    padding: 6px 10px;
+    font-weight: 600;
+    font-size: 11px;
+    text-align: left;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  .ba-table td { padding: 5px 10px; border-bottom: 1px solid #F0F0F0; }
+
+  .impact-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .impact-item {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .impact-item .big { font-size: 32px; font-weight: 800; color: var(--terra); line-height: 1.1; }
+  .impact-item .desc { font-size: 13px; color: var(--ink-light); margin-top: 6px; }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--beige-dark), transparent);
+    max-width: 1020px;
+    margin: 0 auto;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, var(--ink) 0%, #2A2A3E 50%, #3A2A2E 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 80px 40px;
+  }
+  .cta-section h2 { font-size: 36px; font-weight: 700; margin-bottom: 16px; }
+  .cta-section h2 span { color: var(--terra-light); }
+  .cta-section p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 550px; margin: 0 auto 36px; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .cta-btn.primary { background: var(--terra); color: var(--white); }
+  .cta-btn.primary:hover { background: var(--terra-light); }
+  .cta-btn.secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.25); }
+  .cta-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+
+  .footer { text-align: center; padding: 32px 40px; font-size: 12px; color: var(--ink-muted); background: var(--beige); }
+
+  .scenario-box {
+    background: var(--white);
+    border-left: 4px solid var(--terra);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .scenario-box .scene-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--terra); margin-bottom: 6px;
+  }
+  .scenario-box p { font-size: 14px; color: var(--ink-light); line-height: 1.6; }
+
+  .mockup-tabs { display: flex; gap: 0; margin-bottom: 0; }
+  .mockup-tab {
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid transparent;
+    color: var(--ink-muted);
+    background: var(--beige-mid);
+    transition: all 0.2s;
+    position: relative;
+    bottom: -1px;
+  }
+  .mockup-tab.active {
+    background: var(--white);
+    color: var(--terra);
+    border: 1px solid var(--excel-grid);
+    border-bottom-color: var(--white);
+  }
+  .mockup-content { display: none; }
+  .mockup-content.active { display: block; }
+
+  .exec-quote {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    margin: 40px 0;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--beige-dark);
+  }
+  .exec-quote::before {
+    content: '\201C';
+    font-size: 72px; color: var(--terra); opacity: 0.2;
+    position: absolute; top: 8px; left: 20px; line-height: 1;
+    font-family: Georgia, serif;
+  }
+  .exec-quote p { font-size: 16px; color: var(--ink-light); font-style: italic; line-height: 1.6; padding-left: 40px; }
+  .exec-quote .attribution { font-style: normal; font-size: 13px; font-weight: 600; color: var(--terra); margin-top: 12px; padding-left: 40px; }
+
+  .code-block {
+    background: #1E1E2A;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .code-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; background: #2A2A3E;
+    font-size: 12px; color: rgba(255,255,255,0.5);
+  }
+  .code-header .dots { display: flex; gap: 5px; }
+  .code-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-header .dot.r { background: #FF5F57; }
+  .code-header .dot.y { background: #FFBD2E; }
+  .code-header .dot.g { background: #28CA42; }
+  .code-block pre {
+    padding: 16px 20px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px; line-height: 1.6;
+    color: #D4D4D4; overflow-x: auto; white-space: pre;
+  }
+  .code-block .kw { color: #C586C0; }
+  .code-block .fn { color: #DCDCAA; }
+  .code-block .str { color: #CE9178; }
+  .code-block .cm { color: #6A9955; }
+  .code-block .num { color: #B5CEA8; }
+  .code-block .var { color: #9CDCFE; }
+
+  @media (max-width: 900px) {
+    .mockup-container { grid-template-columns: 1fr; }
+    .claude-sidebar { min-height: 400px; }
+    .roi-bar { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 32px; }
+    .before-after { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); padding: 0; }
+    .impact-box { grid-template-columns: 1fr; }
+    .lang-switch { top: 12px; right: 12px; }
+  }
+  @media print {
+    .lang-switch { display: none; }
+    .hero { padding: 40px 20px 30px; }
+    .mockup-container { box-shadow: none; border: 1px solid #ddd; }
+    .section { padding: 40px 20px; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="lang-en">
+
+<!-- ============ LANGUAGE SWITCHER ============ -->
+<div class="lang-switch">
+  <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" id="btn-th" onclick="setLang('th')">TH</button>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-badge">Claude Cowork &times; Microsoft Excel</div>
+  <h1>
+    <span class="en">Transform Your <span>Retail Excel Workflows</span> with AI</span>
+    <span class="th">ยกระดับ<span>งาน Excel ค้าปลีก</span>ด้วยพลัง AI</span>
+  </h1>
+  <p>
+    <span class="en">See how Claude Cowork's Excel sidebar turns hours of manual data work into minutes of intelligent conversation. Three real-world retail scenarios, demonstrated step by step.</span>
+    <span class="th">ดูว่า Claude Cowork ช่วยเปลี่ยนงานข้อมูลที่ใช้เวลาหลายชั่วโมง ให้เหลือเพียงไม่กี่นาทีผ่านการสนทนาอัจฉริยะ พร้อมตัวอย่างจริง 3 สถานการณ์จากธุรกิจค้าปลีก</span>
+  </p>
+  <a href="#example1" class="hero-cta">
+    <span class="en">See It In Action &darr;</span>
+    <span class="th">ดูตัวอย่างการใช้งาน &darr;</span>
+  </a>
+</section>
+
+<!-- ============ ROI BAR ============ -->
+<div class="roi-bar">
+  <div class="roi-card">
+    <div class="roi-number">85%</div>
+    <div class="roi-label">
+      <span class="en">Time Saved on<br>Data Cleanup</span>
+      <span class="th">ประหยัดเวลา<br>ทำความสะอาดข้อมูล</span>
+    </div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">2 min</div>
+    <div class="roi-label">
+      <span class="en">Complex Formula<br>Generation</span>
+      <span class="th">สร้างสูตรซับซ้อน<br>ได้ทันที</span>
+    </div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">10 sec</div>
+    <div class="roi-label">
+      <span class="en">Daily Inventory<br>Alert Check</span>
+      <span class="th">ตรวจสอบสต็อก<br>อัตโนมัติรายวัน</span>
+    </div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">Zero</div>
+    <div class="roi-label">
+      <span class="en">Excel Skills<br>Required</span>
+      <span class="th">ไม่ต้องมีทักษะ<br>Excel ขั้นสูง</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== EXAMPLE 1 ============================== -->
+<section class="section" id="example1">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>
+      <span class="en">Daily Sales Data Cleanup</span>
+      <span class="th">ทำความสะอาดข้อมูลยอดขายรายวัน</span>
+    </h2>
+    <p>
+      <span class="en">From messy POS exports to analysis-ready data in a single conversation</span>
+      <span class="th">จากข้อมูล POS ที่ยุ่งเหยิง สู่ข้อมูลพร้อมวิเคราะห์ ด้วยการสนทนาครั้งเดียว</span>
+    </p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      <span class="en">Before: 2&ndash;3 hours &nbsp;|&nbsp; After: 10 minutes</span>
+      <span class="th">ก่อน: 2&ndash;3 ชั่วโมง &nbsp;|&nbsp; หลัง: 10 นาที</span>
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label">
+      <span class="en">The Scenario</span>
+      <span class="th">สถานการณ์</span>
+    </div>
+    <p>
+      <span class="en">Every morning, the operations team receives a raw POS export with inconsistent product names, blank quantity fields, duplicate transactions, and mixed date formats. Before any reporting can happen, someone must manually find and fix these problems&mdash;row by row, across hundreds of entries.</span>
+      <span class="th">ทุกเช้า ทีมปฏิบัติการจะได้รับข้อมูลส่งออกจากระบบ POS ที่มีชื่อสินค้าไม่สม่ำเสมอ จำนวนสินค้าว่างเปล่า รายการซ้ำ และรูปแบบวันที่ไม่ตรงกัน ก่อนจะทำรายงานได้ ต้องมีคนตรวจสอบและแก้ไขปัญหาเหล่านี้ด้วยตัวเอง ทีละแถว หลายร้อยรายการ</span>
+    </p>
+  </div>
+
+  <div class="mockup-tabs">
+    <div class="mockup-tab active" onclick="showTab('e1','audit')">
+      <span class="en">Step 1: Audit</span>
+      <span class="th">ขั้นที่ 1: ตรวจสอบ</span>
+    </div>
+    <div class="mockup-tab" onclick="showTab('e1','fix')">
+      <span class="en">Step 2: Fix</span>
+      <span class="th">ขั้นที่ 2: แก้ไข</span>
+    </div>
+    <div class="mockup-tab" onclick="showTab('e1','result')">
+      <span class="en">Step 3: Result</span>
+      <span class="th">ขั้นที่ 3: ผลลัพธ์</span>
+    </div>
+  </div>
+
+  <!-- AUDIT TAB -->
+  <div class="mockup-content active" id="e1-audit">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Sales_Export_2026-03-11.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div>
+          <div class="ribbon-tab">Insert</div>
+          <div class="ribbon-tab">Data</div>
+          <div class="ribbon-tab">View</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">A1</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">Trans_ID</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th><th class="col-header">B</th><th class="col-header">C</th>
+                <th class="col-header">D</th><th class="col-header">E</th><th class="col-header">F</th><th class="col-header">G</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Trans_ID</td><td>Date</td><td>Product</td><td>Category</td><td>Qty</td><td>Price</td><td>Store</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td class="cell-duplicate">T001</td><td class="cell-warning">2026-03-01</td><td>Coca Cola 330ml</td><td class="cell-error">beverages</td><td>5</td><td>25</td><td>Store A</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>T002</td><td class="cell-warning">01/03/2026</td><td class="cell-error">coca-cola 330 ml</td><td class="cell-error">Bev.</td><td>3</td><td>25</td><td>Store A</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>T003</td><td class="cell-warning">Mar 1, 2026</td><td>Lay's Classic 75g</td><td class="cell-error">SNACKS</td><td class="cell-blank" style="text-align:center;font-style:italic;color:#C0392B;">&empty;</td><td>35</td><td>Store B</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td class="cell-duplicate">T001</td><td>2026-03-01</td><td>Coca Cola 330ml</td><td class="cell-error">beverages</td><td>5</td><td>25</td><td>Store A</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td>T004</td><td>2026-03-01</td><td class="cell-error">lays classic</td><td class="cell-error">Snack</td><td>2</td><td>35</td><td>Store B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div>
+            <div class="sidebar-title">Claude</div>
+            <div class="sidebar-subtitle">
+              <span class="en">Reading workbook&hellip;</span>
+              <span class="th">กำลังอ่านไฟล์&hellip;</span>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            <span class="en">Review the sales data in Sheet1. Identify all data quality issues including inconsistent names, duplicate rows, missing values, and date format problems.</span>
+            <span class="th">ตรวจสอบข้อมูลยอดขายใน Sheet1 ระบุปัญหาคุณภาพข้อมูลทั้งหมด รวมถึงชื่อไม่สม่ำเสมอ แถวซ้ำ ค่าว่าง และรูปแบบวันที่ที่ไม่ตรงกัน</span>
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <span class="en">
+              I've analyzed all 5 data rows and found <strong>4 categories of issues</strong>:
+              <br><br>
+              <strong>&#x26A0; Duplicates</strong>
+              <ul><li>Rows <span class="cell-cite">2</span> and <span class="cell-cite">5</span> are identical (Trans_ID T001) &mdash; likely a duplicate entry</li></ul>
+              <strong>&#x26A0; Inconsistent Names</strong>
+              <ul>
+                <li><span class="cell-cite">C2</span> "Coca Cola 330ml" vs <span class="cell-cite">C3</span> "coca-cola 330 ml" &mdash; same product</li>
+                <li><span class="cell-cite">C4</span> "Lay's Classic 75g" vs <span class="cell-cite">C6</span> "lays classic" &mdash; same product</li>
+              </ul>
+              <strong>&#x26A0; Category Chaos</strong>
+              <ul><li>4 variations: "beverages", "Bev.", "SNACKS", "Snack"</li></ul>
+              <strong>&#x26A0; Missing &amp; Dates</strong>
+              <ul>
+                <li>Cell <span class="cell-cite">E4</span> (Qty) is blank</li>
+                <li>3 date formats mixed</li>
+              </ul>
+            </span>
+            <span class="th">
+              ฉันวิเคราะห์ข้อมูลทั้ง 5 แถวแล้ว พบ<strong>ปัญหา 4 ประเภท</strong>:
+              <br><br>
+              <strong>&#x26A0; ข้อมูลซ้ำ</strong>
+              <ul><li>แถว <span class="cell-cite">2</span> และ <span class="cell-cite">5</span> เหมือนกัน (Trans_ID T001) &mdash; น่าจะเป็นรายการซ้ำ</li></ul>
+              <strong>&#x26A0; ชื่อไม่สม่ำเสมอ</strong>
+              <ul>
+                <li><span class="cell-cite">C2</span> "Coca Cola 330ml" vs <span class="cell-cite">C3</span> "coca-cola 330 ml" &mdash; สินค้าเดียวกัน</li>
+                <li><span class="cell-cite">C4</span> "Lay's Classic 75g" vs <span class="cell-cite">C6</span> "lays classic" &mdash; สินค้าเดียวกัน</li>
+              </ul>
+              <strong>&#x26A0; หมวดหมู่สับสน</strong>
+              <ul><li>มี 4 รูปแบบ: "beverages", "Bev.", "SNACKS", "Snack"</li></ul>
+              <strong>&#x26A0; ข้อมูลว่าง &amp; วันที่</strong>
+              <ul>
+                <li>เซลล์ <span class="cell-cite">E4</span> (จำนวน) ว่างเปล่า</li>
+                <li>รูปแบบวันที่ปนกัน 3 แบบ</li>
+              </ul>
+            </span>
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">
+            <span class="en">Ask about your data&hellip;</span>
+            <span class="th">ถามเกี่ยวกับข้อมูลของคุณ&hellip;</span>
+            <div class="send-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIX TAB -->
+  <div class="mockup-content" id="e1-fix">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Sales_Export_2026-03-11.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Insert</div><div class="ribbon-tab">Data</div><div class="ribbon-tab">View</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">H2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">=IF(COUNTIF($A$2:$A$100,A2)>1,"DUPLICATE","OK")</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th><th class="col-header">B</th><th class="col-header">C</th><th class="col-header">D</th><th class="col-header">E</th><th class="col-header">F</th><th class="col-header">G</th>
+                <th class="col-header" style="background:#E3F2FD;">H</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Trans_ID</td><td>Date</td><td>Product</td><td>Category</td><td>Qty</td><td>Price</td><td>Store</td><td class="cell-formula">Dup_Check</td>
+              </tr>
+              <tr><td style="text-align:center;background:#F8F8F8;color:#999">2</td><td>T001</td><td>2026-03-01</td><td>Coca Cola 330ml</td><td>beverages</td><td>5</td><td>25</td><td>Store A</td><td class="cell-error" style="font-weight:700;">DUPLICATE</td></tr>
+              <tr><td style="text-align:center;background:#F8F8F8;color:#999">3</td><td>T002</td><td>01/03/2026</td><td>coca-cola 330 ml</td><td>Bev.</td><td>3</td><td>25</td><td>Store A</td><td class="cell-fixed">OK</td></tr>
+              <tr><td style="text-align:center;background:#F8F8F8;color:#999">4</td><td>T003</td><td>Mar 1, 2026</td><td>Lay's Classic 75g</td><td>SNACKS</td><td class="cell-blank" style="text-align:center;font-style:italic;color:#C0392B;">&empty;</td><td>35</td><td>Store B</td><td class="cell-fixed">OK</td></tr>
+              <tr><td style="text-align:center;background:#F8F8F8;color:#999">5</td><td>T001</td><td>2026-03-01</td><td>Coca Cola 330ml</td><td>beverages</td><td>5</td><td>25</td><td>Store A</td><td class="cell-error" style="font-weight:700;">DUPLICATE</td></tr>
+              <tr><td style="text-align:center;background:#F8F8F8;color:#999">6</td><td>T004</td><td>2026-03-01</td><td>lays classic</td><td>Snack</td><td>2</td><td>35</td><td>Store B</td><td class="cell-fixed">OK</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle"><span class="en">Generating fixes&hellip;</span><span class="th">กำลังสร้างสูตรแก้ไข&hellip;</span></div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            <span class="en">Give me the Excel formulas to fix all of these issues. Standardize dates to YYYY-MM-DD, categories to proper names, and flag duplicates.</span>
+            <span class="th">ขอสูตร Excel สำหรับแก้ไขปัญหาทั้งหมด ทำให้วันที่เป็น YYYY-MM-DD หมวดหมู่เป็นชื่อมาตรฐาน และแฟล็กรายการซ้ำ</span>
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <span class="en">
+              Here are the formulas to clean your data:
+              <br><br>
+              <strong>Duplicate detection (Column H):</strong>
+              <code>=IF(COUNTIF($A$2:$A$100,A2)&gt;1, "DUPLICATE","OK")</code>
+              <strong>Date standardization:</strong>
+              <code>=TEXT(DATEVALUE(B2),"YYYY-MM-DD")</code>
+              <strong>Category cleanup:</strong>
+              <code>=IF(OR(D2="beverages",D2="Bev."), "Beverages", IF(OR(D2="SNACKS", D2="Snack"),"Snacks",D2))</code>
+              These formulas can be dragged down for all rows.
+            </span>
+            <span class="th">
+              นี่คือสูตรสำหรับทำความสะอาดข้อมูล:
+              <br><br>
+              <strong>ตรวจจับรายการซ้ำ (คอลัมน์ H):</strong>
+              <code>=IF(COUNTIF($A$2:$A$100,A2)&gt;1, "DUPLICATE","OK")</code>
+              <strong>มาตรฐานวันที่:</strong>
+              <code>=TEXT(DATEVALUE(B2),"YYYY-MM-DD")</code>
+              <strong>แก้ไขหมวดหมู่:</strong>
+              <code>=IF(OR(D2="beverages",D2="Bev."), "Beverages", IF(OR(D2="SNACKS", D2="Snack"),"Snacks",D2))</code>
+              สูตรเหล่านี้สามารถลากลงเพื่อใช้กับทุกแถวได้
+            </span>
+          </div>
+        </div>
+        <div class="sidebar-input"><div class="input-fake"><span class="en">Ask about your data&hellip;</span><span class="th">ถามเกี่ยวกับข้อมูลของคุณ&hellip;</span><div class="send-btn"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT TAB -->
+  <div class="mockup-content" id="e1-result">
+    <div class="before-after">
+      <div class="ba-panel">
+        <div class="ba-label before">
+          <span class="en">&#x2717; Before &mdash; Raw POS Export</span>
+          <span class="th">&#x2717; ก่อน &mdash; ข้อมูลดิบจาก POS</span>
+        </div>
+        <table class="ba-table">
+          <thead><tr><th>Date</th><th>Product</th><th>Category</th><th>Qty</th></tr></thead>
+          <tbody>
+            <tr><td style="background:#FFF3CD">2026-03-01</td><td>Coca Cola 330ml</td><td class="cell-error" style="padding:5px 10px">beverages</td><td>5</td></tr>
+            <tr><td style="background:#FFF3CD">01/03/2026</td><td style="background:#FDE8E8">coca-cola 330 ml</td><td class="cell-error" style="padding:5px 10px">Bev.</td><td>3</td></tr>
+            <tr><td style="background:#FFF3CD">Mar 1, 2026</td><td>Lay's Classic 75g</td><td class="cell-error" style="padding:5px 10px">SNACKS</td><td style="background:#FFF0F0;text-align:center;font-style:italic;color:#aaa">&mdash;</td></tr>
+            <tr><td>2026-03-01</td><td style="background:#FDE8E8">lays classic</td><td class="cell-error" style="padding:5px 10px">Snack</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ba-arrow">&rarr;</div>
+      <div class="ba-panel">
+        <div class="ba-label after">
+          <span class="en">&#x2713; After &mdash; Claude Cleaned</span>
+          <span class="th">&#x2713; หลัง &mdash; Claude ทำความสะอาดแล้ว</span>
+        </div>
+        <table class="ba-table">
+          <thead><tr><th>Date</th><th>Product</th><th>Category</th><th>Qty</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-03-01</td><td class="cell-fixed" style="padding:5px 10px">Coca Cola 330ml</td><td class="cell-fixed" style="padding:5px 10px">Beverages</td><td>5</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-03-01</td><td class="cell-fixed" style="padding:5px 10px">Coca Cola 330ml</td><td class="cell-fixed" style="padding:5px 10px">Beverages</td><td>3</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-03-01</td><td class="cell-fixed" style="padding:5px 10px">Lay's Classic 75g</td><td class="cell-fixed" style="padding:5px 10px">Snacks</td><td style="background:#FFF8E1;font-weight:600;">VERIFY</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-03-01</td><td class="cell-fixed" style="padding:5px 10px">Lay's Classic 75g</td><td class="cell-fixed" style="padding:5px 10px">Snacks</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big"><span class="en">5 issues</span><span class="th">5 ปัญหา</span></div>
+      <div class="desc"><span class="en">Found in seconds across<br>4 categories of problems</span><span class="th">พบในไม่กี่วินาที<br>จาก 4 ประเภทปัญหา</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big"><span class="en">10 min</span><span class="th">10 นาที</span></div>
+      <div class="desc"><span class="en">Full cleanup completed<br>vs. 2&ndash;3 hours manually</span><span class="th">ทำความสะอาดเสร็จสิ้น<br>เทียบกับ 2&ndash;3 ชม. แบบทำเอง</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big">100%</div>
+      <div class="desc"><span class="en">Accurate reports from<br>day one, every time</span><span class="th">รายงานถูกต้อง<br>ตั้งแต่วันแรก ทุกครั้ง</span></div>
+    </div>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="workflow-step" data-step="1">
+      <h4><span class="en">Paste &amp; Ask</span><span class="th">วาง &amp; ถาม</span></h4>
+      <p><span class="en">Open the Claude sidebar and ask it to review your raw POS export for data quality issues.</span><span class="th">เปิดแถบ Claude แล้วขอให้ตรวจสอบข้อมูล POS ดิบเพื่อหาปัญหาคุณภาพ</span></p>
+    </div>
+    <div class="workflow-step" data-step="2">
+      <h4><span class="en">Review Findings</span><span class="th">ตรวจสอบผลการค้นพบ</span></h4>
+      <p><span class="en">Claude identifies duplicates, inconsistencies, blanks, and formatting problems with exact cell references.</span><span class="th">Claude ระบุรายการซ้ำ ข้อมูลไม่สอดคล้อง ช่องว่าง และปัญหาการจัดรูปแบบ พร้อมอ้างอิงเซลล์ที่แน่นอน</span></p>
+    </div>
+    <div class="workflow-step" data-step="3">
+      <h4><span class="en">Apply Fixes</span><span class="th">ใช้การแก้ไข</span></h4>
+      <p><span class="en">Get ready-to-use formulas or let Agent Mode clean the data directly&mdash;your choice.</span><span class="th">รับสูตรพร้อมใช้ หรือให้โหมด Agent ทำความสะอาดข้อมูลโดยตรง&mdash;เลือกได้</span></p>
+    </div>
+    <div class="workflow-step" data-step="4">
+      <h4><span class="en">Analyze Confidently</span><span class="th">วิเคราะห์อย่างมั่นใจ</span></h4>
+      <p><span class="en">Your data is now clean, consistent, and ready for pivot tables, reports, and decisions.</span><span class="th">ข้อมูลของคุณสะอาด สม่ำเสมอ พร้อมสำหรับ Pivot Table รายงาน และการตัดสินใจ</span></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== EXAMPLE 2 ============================== -->
+<section class="section" id="example2">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <h2><span class="en">Sales Formula Builder</span><span class="th">ตัวสร้างสูตรยอดขาย</span></h2>
+    <p><span class="en">Describe what you need in plain English. Get production-ready Excel formulas in seconds.</span><span class="th">อธิบายสิ่งที่คุณต้องการเป็นภาษาพูด รับสูตร Excel พร้อมใช้งานในไม่กี่วินาที</span></p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      <span class="en">Before: Trial &amp; error &nbsp;|&nbsp; After: 2 minutes, first try</span>
+      <span class="th">ก่อน: ลองผิดลองถูก &nbsp;|&nbsp; หลัง: 2 นาที ถูกตั้งแต่ครั้งแรก</span>
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label"><span class="en">The Scenario</span><span class="th">สถานการณ์</span></div>
+    <p><span class="en">A sales analyst needs to calculate net revenue that handles both promotional and regular pricing, build a running total, rank products by performance, and apply conditional formatting&mdash;all without memorizing complex Excel syntax.</span><span class="th">นักวิเคราะห์ยอดขายต้องคำนวณรายได้สุทธิที่รองรับทั้งราคาโปรโมชันและราคาปกติ สร้างยอดรวมสะสม จัดอันดับสินค้าตามผลงาน และใส่การจัดรูปแบบตามเงื่อนไข ทั้งหมดนี้โดยไม่ต้องจำสูตร Excel ที่ซับซ้อน</span></p>
+  </div>
+
+  <div class="mockup-container">
+    <div class="excel-panel">
+      <div class="excel-titlebar">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        Sales_Tracker_Q1.xlsx &mdash; Excel
+      </div>
+      <div class="excel-ribbon">
+        <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Insert</div><div class="ribbon-tab">Formulas</div><div class="ribbon-tab">Data</div>
+      </div>
+      <div class="formula-bar">
+        <span class="cell-ref">H2</span>
+        <span class="fx">fx</span>
+        <span class="formula-text">=IF(F2="Yes",G2*C2,D2*C2*(1-E2))</span>
+      </div>
+      <div class="excel-grid">
+        <table>
+          <thead>
+            <tr>
+              <th class="row-num"></th>
+              <th class="col-header">A</th><th class="col-header">B</th><th class="col-header">C</th><th class="col-header">D</th><th class="col-header">E</th><th class="col-header">F</th><th class="col-header">G</th>
+              <th class="col-header" style="background:#E3F2FD">H</th><th class="col-header" style="background:#E3F2FD">I</th><th class="col-header" style="background:#E3F2FD">J</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="header-row">
+              <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+              <td>SKU</td><td>Product</td><td>Qty</td><td>Price</td><td>Disc %</td><td>Promo?</td><td>Promo$</td>
+              <td class="cell-formula">Net Rev</td><td class="cell-formula">Cumul.</td><td class="cell-formula">Rank</td>
+            </tr>
+            <tr><td style="text-align:center;background:#F8F8F8;color:#999">2</td><td>SKU-101</td><td>Shampoo 200ml</td><td>12</td><td>89</td><td>5%</td><td>No</td><td>&mdash;</td><td class="cell-highlight" style="font-weight:700">1,014.60</td><td class="cell-highlight">1,014.60</td><td class="cell-highlight">2</td></tr>
+            <tr><td style="text-align:center;background:#F8F8F8;color:#999">3</td><td>SKU-204</td><td>Rice 5kg</td><td>8</td><td>195</td><td>0%</td><td>Yes</td><td>175</td><td class="cell-highlight" style="font-weight:700">1,400.00</td><td class="cell-highlight">2,414.60</td><td class="cell-highlight">1</td></tr>
+            <tr><td style="text-align:center;background:#F8F8F8;color:#999">4</td><td>SKU-317</td><td>Laundry Det.</td><td>5</td><td>149</td><td>10%</td><td>No</td><td>&mdash;</td><td class="cell-highlight" style="font-weight:700">670.50</td><td class="cell-highlight">3,085.10</td><td class="cell-highlight">3</td></tr>
+            <tr><td style="text-align:center;background:#F8F8F8;color:#999">5</td><td>SKU-422</td><td>Noodles 5-pack</td><td>20</td><td>55</td><td>0%</td><td>Yes</td><td>45</td><td style="font-weight:700;background:#FDEDEC;color:#C0392B">900.00</td><td class="cell-highlight">3,985.10</td><td class="cell-highlight">4</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="claude-sidebar">
+      <div class="sidebar-header">
+        <div class="claude-logo">C</div>
+        <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle"><span class="en">Analyzing Sales_Tracker_Q1</span><span class="th">กำลังวิเคราะห์ Sales_Tracker_Q1</span></div></div>
+      </div>
+      <div class="sidebar-chat">
+        <div class="chat-msg user">
+          <span class="en">Column H should calculate Net Revenue. If Column F says "Yes" (promo item), use Promo Price &times; Qty. Otherwise use Price &times; Qty &times; (1 &minus; Discount).</span>
+          <span class="th">คอลัมน์ H ควรคำนวณรายได้สุทธิ ถ้าคอลัมน์ F เป็น "Yes" (สินค้าโปรโมชัน) ให้ใช้ราคาโปร &times; จำนวน ไม่เช่นนั้นให้ใช้ราคา &times; จำนวน &times; (1 &minus; ส่วนลด)</span>
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          <span class="en">
+            Here's your formula for <span class="cell-cite">H2</span>:
+            <code>=IF(F2="Yes", G2*C2, D2*C2*(1-E2))</code>
+            <strong>How it works:</strong> checks if the item is promotional. If yes &rarr; Promo Price &times; Qty. If no &rarr; regular Price &times; Qty minus the discount percentage. Drag down to apply to all rows.
+          </span>
+          <span class="th">
+            สูตรสำหรับเซลล์ <span class="cell-cite">H2</span>:
+            <code>=IF(F2="Yes", G2*C2, D2*C2*(1-E2))</code>
+            <strong>วิธีทำงาน:</strong> ตรวจสอบว่าเป็นสินค้าโปรโมชันหรือไม่ ถ้าใช่ &rarr; ราคาโปร &times; จำนวน ถ้าไม่ &rarr; ราคาปกติ &times; จำนวน ลบส่วนลด ลากลงเพื่อใช้กับทุกแถว
+          </span>
+        </div>
+        <div class="chat-msg user">
+          <span class="en">Now add cumulative revenue in I and rank in J.</span>
+          <span class="th">เพิ่มรายได้สะสมใน I และอันดับใน J</span>
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          <span class="en">
+            <strong>Cumulative Revenue</strong> (<span class="cell-cite">I2</span>):
+            <code>=SUM($H$2:H2)</code>
+            <strong>Revenue Rank</strong> (<span class="cell-cite">J2</span>):
+            <code>=RANK(H2,$H$2:$H$100,0)</code>
+            Both formulas are drag-down ready. Rice 5kg ranks #1 at 1,400 despite having only 8 units&mdash;the promo pricing drives strong per-unit value.
+          </span>
+          <span class="th">
+            <strong>รายได้สะสม</strong> (<span class="cell-cite">I2</span>):
+            <code>=SUM($H$2:H2)</code>
+            <strong>อันดับรายได้</strong> (<span class="cell-cite">J2</span>):
+            <code>=RANK(H2,$H$2:$H$100,0)</code>
+            สูตรทั้งสองพร้อมลากลง ข้าวสาร 5 กก. อันดับ 1 ที่ 1,400 แม้ขายแค่ 8 หน่วย&mdash;ราคาโปรโมชันทำให้มูลค่าต่อหน่วยสูง
+          </span>
+        </div>
+      </div>
+      <div class="sidebar-input"><div class="input-fake"><span class="en">Ask about your data&hellip;</span><span class="th">ถามเกี่ยวกับข้อมูลของคุณ&hellip;</span><div class="send-btn"></div></div></div>
+    </div>
+  </div>
+
+  <div class="exec-quote">
+    <p><span class="en">Instead of searching Google for formula syntax, staff describe what they need in plain English. Claude writes the formula, explains it, and they learn while working. It's like having a senior Excel expert sitting next to every team member.</span><span class="th">แทนที่จะค้นหาสูตรจาก Google พนักงานแค่อธิบายสิ่งที่ต้องการเป็นภาษาพูด Claude เขียนสูตร อธิบาย และพนักงานเรียนรู้ไปพร้อมกับทำงาน เหมือนมีผู้เชี่ยวชาญ Excel อาวุโสนั่งอยู่ข้างๆ ทุกคนในทีม</span></p>
+    <div class="attribution"><span class="en">&mdash; Designed for retail operations teams at all skill levels</span><span class="th">&mdash; ออกแบบมาสำหรับทีมปฏิบัติการค้าปลีกทุกระดับทักษะ</span></div>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="workflow-step" data-step="1">
+      <h4><span class="en">Describe the Logic</span><span class="th">อธิบายตรรกะ</span></h4>
+      <p><span class="en">"If it's a promo, use promo price. Otherwise use regular price minus discount."</span><span class="th">"ถ้าเป็นโปรโมชัน ใช้ราคาโปร ไม่เช่นนั้นใช้ราคาปกติลบส่วนลด"</span></p>
+    </div>
+    <div class="workflow-step" data-step="2">
+      <h4><span class="en">Get the Formula</span><span class="th">รับสูตร</span></h4>
+      <p><span class="en">Claude writes the exact Excel formula with cell references matching your sheet layout.</span><span class="th">Claude เขียนสูตร Excel ที่แน่นอน พร้อมอ้างอิงเซลล์ตรงกับเลย์เอาต์ของชีท</span></p>
+    </div>
+    <div class="workflow-step" data-step="3">
+      <h4><span class="en">Understand It</span><span class="th">เข้าใจมัน</span></h4>
+      <p><span class="en">Every formula comes with a plain-English explanation so you learn while you work.</span><span class="th">ทุกสูตรมาพร้อมคำอธิบายเป็นภาษาเข้าใจง่าย เพื่อให้คุณเรียนรู้ไปพร้อมกับทำงาน</span></p>
+    </div>
+    <div class="workflow-step" data-step="4">
+      <h4><span class="en">Apply &amp; Extend</span><span class="th">ใช้งาน &amp; ต่อยอด</span></h4>
+      <p><span class="en">Chain requests: "Now add a running total. Now rank them. Now highlight the top 3."</span><span class="th">สั่งต่อเนื่อง: "เพิ่มยอดรวมสะสม จัดอันดับ แล้วไฮไลท์ 3 อันดับแรก"</span></p>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big"><span class="en">3 formulas</span><span class="th">3 สูตร</span></div>
+      <div class="desc"><span class="en">Built and explained<br>in one conversation</span><span class="th">สร้างและอธิบาย<br>ในการสนทนาครั้งเดียว</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big"><span class="en">0 errors</span><span class="th">0 ข้อผิดพลาด</span></div>
+      <div class="desc"><span class="en">Correct on first attempt<br>across 1,200 rows</span><span class="th">ถูกต้องตั้งแต่ครั้งแรก<br>ใช้ได้กับ 1,200 แถว</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big">+Skills</div>
+      <div class="desc"><span class="en">Staff learn Excel<br>while getting work done</span><span class="th">พนักงานเรียนรู้ Excel<br>ไปพร้อมกับทำงาน</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== EXAMPLE 3 ============================== -->
+<section class="section" id="example3">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <h2><span class="en">Inventory Reorder Alert System</span><span class="th">ระบบแจ้งเตือนสั่งซื้อสินค้าคงคลัง</span></h2>
+    <p><span class="en">From manual stock checks to automated alerts&mdash;built entirely through conversation</span><span class="th">จากการตรวจสต็อกด้วยตนเอง สู่ระบบแจ้งเตือนอัตโนมัติ&mdash;สร้างผ่านการสนทนาทั้งหมด</span></p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      <span class="en">Before: 30 min/day manual &nbsp;|&nbsp; After: 10 seconds automated</span>
+      <span class="th">ก่อน: 30 นาที/วัน แบบทำเอง &nbsp;|&nbsp; หลัง: 10 วินาที อัตโนมัติ</span>
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label"><span class="en">The Scenario</span><span class="th">สถานการณ์</span></div>
+    <p><span class="en">A retail store manages 500 SKUs. Every morning, someone manually scrolls through the stock report looking for items running low. This takes 20&ndash;30 minutes, is error-prone, and sometimes critical reorders get missed, leading to stockouts that cost the business thousands in lost sales.</span><span class="th">ร้านค้าปลีกจัดการสินค้า 500 รายการ ทุกเช้ามีคนต้องเลื่อนดูรายงานสต็อกเพื่อหาสินค้าที่ใกล้หมด ใช้เวลา 20&ndash;30 นาที มีโอกาสพลาดสูง บางครั้งสินค้าที่ต้องสั่งซื้อด่วนถูกมองข้าม ทำให้เกิดสินค้าขาดสต็อก สูญเสียยอดขายหลายพันบาท</span></p>
+  </div>
+
+  <div class="mockup-container">
+    <div class="excel-panel">
+      <div class="excel-titlebar">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        Inventory_Report_Daily.xlsx &mdash; Excel
+      </div>
+      <div class="excel-ribbon">
+        <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Insert</div><div class="ribbon-tab">Developer</div><div class="ribbon-tab">Data</div>
+      </div>
+      <div class="formula-bar">
+        <span class="cell-ref">I2</span>
+        <span class="fx">fx</span>
+        <span class="formula-text">=IF(D2&lt;G2,"REORDER NOW",IF(D2&lt;G2*1.5,"LOW STOCK","OK"))</span>
+      </div>
+      <div class="excel-grid">
+        <table>
+          <thead>
+            <tr>
+              <th class="row-num"></th>
+              <th class="col-header">A</th><th class="col-header">B</th><th class="col-header">C</th><th class="col-header">D</th><th class="col-header">E</th><th class="col-header">F</th>
+              <th class="col-header" style="background:#E3F2FD">G</th><th class="col-header" style="background:#E3F2FD">H</th><th class="col-header" style="background:#E3F2FD">I</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="header-row">
+              <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+              <td>SKU</td><td>Product</td><td>Category</td><td>Stock</td><td>Avg/Day</td><td>Lead&nbsp;Days</td>
+              <td class="cell-formula">Reorder Pt</td><td class="cell-formula">Days Left</td><td class="cell-formula">Status</td>
+            </tr>
+            <tr class="row-danger"><td style="text-align:center;background:#F8F8F8;color:#999">2</td><td>SKU-101</td><td>Shampoo 200ml</td><td>Care</td><td style="font-weight:700;color:#C0392B">45</td><td>8</td><td>7</td><td>84</td><td style="font-weight:700;color:#C0392B">5.6</td><td><span class="status-reorder">REORDER NOW</span></td></tr>
+            <tr class="row-ok"><td style="text-align:center;background:#F8F8F8;color:#999">3</td><td>SKU-204</td><td>Rice 5kg</td><td>Grocery</td><td>120</td><td>25</td><td>5</td><td>187.5</td><td style="font-weight:700;color:#E67E22">4.8</td><td><span class="status-reorder">REORDER NOW</span></td></tr>
+            <tr class="row-warning"><td style="text-align:center;background:#F8F8F8;color:#999">4</td><td>SKU-317</td><td>Laundry Det.</td><td>Household</td><td>12</td><td>4</td><td>10</td><td>60</td><td style="font-weight:700;color:#C0392B">3.0</td><td><span class="status-reorder">REORDER NOW</span></td></tr>
+            <tr class="row-warning"><td style="text-align:center;background:#F8F8F8;color:#999">5</td><td>SKU-550</td><td>Dish Soap 500ml</td><td>Household</td><td>85</td><td>6</td><td>7</td><td>63</td><td>14.2</td><td><span class="status-low">LOW STOCK</span></td></tr>
+            <tr class="row-ok"><td style="text-align:center;background:#F8F8F8;color:#999">6</td><td>SKU-612</td><td>Bottled Water 1.5L</td><td>Beverages</td><td>340</td><td>30</td><td>3</td><td>135</td><td>11.3</td><td><span class="status-ok">OK</span></td></tr>
+            <tr class="row-ok"><td style="text-align:center;background:#F8F8F8;color:#999">7</td><td>SKU-718</td><td>Instant Coffee</td><td>Beverages</td><td>200</td><td>10</td><td>5</td><td>75</td><td>20.0</td><td><span class="status-ok">OK</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="claude-sidebar">
+      <div class="sidebar-header">
+        <div class="claude-logo">C</div>
+        <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Inventory_Report_Daily</div></div>
+      </div>
+      <div class="sidebar-chat">
+        <div class="chat-msg user">
+          <span class="en">Build a reorder alert system. Calculate reorder point (Avg Daily Sales &times; Lead Time &times; 1.5), days of stock left, and a status flag: REORDER NOW / LOW STOCK / OK.</span>
+          <span class="th">สร้างระบบแจ้งเตือนสั่งซื้อ คำนวณจุดสั่งซื้อ (ยอดขายเฉลี่ย/วัน &times; Lead Time &times; 1.5) จำนวนวันที่เหลือ และสถานะ: REORDER NOW / LOW STOCK / OK</span>
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          <span class="en">
+            I've designed 3 formulas for columns G&ndash;I:
+            <br><br>
+            <strong>Reorder Point</strong> (<span class="cell-cite">G2</span>):
+            <code>=E2*F2*1.5</code>
+            <strong>Days of Stock</strong> (<span class="cell-cite">H2</span>):
+            <code>=IF(E2=0,"No Data",D2/E2)</code>
+            <strong>Status</strong> (<span class="cell-cite">I2</span>):
+            <code>=IF(D2&lt;G2,"REORDER NOW", IF(D2&lt;G2*1.5,"LOW STOCK","OK"))</code>
+            <br>
+            <strong>&#x1F6A8; Immediate alert:</strong> 3 SKUs need urgent reordering. SKU-317 has only <strong>3 days</strong> of stock with a 10-day lead time.
+          </span>
+          <span class="th">
+            ฉันออกแบบ 3 สูตรสำหรับคอลัมน์ G&ndash;I:
+            <br><br>
+            <strong>จุดสั่งซื้อ</strong> (<span class="cell-cite">G2</span>):
+            <code>=E2*F2*1.5</code>
+            <strong>จำนวนวันที่เหลือ</strong> (<span class="cell-cite">H2</span>):
+            <code>=IF(E2=0,"No Data",D2/E2)</code>
+            <strong>สถานะ</strong> (<span class="cell-cite">I2</span>):
+            <code>=IF(D2&lt;G2,"REORDER NOW", IF(D2&lt;G2*1.5,"LOW STOCK","OK"))</code>
+            <br>
+            <strong>&#x1F6A8; แจ้งเตือนด่วน:</strong> สินค้า 3 รายการต้องสั่งซื้อเร่งด่วน SKU-317 เหลือสต็อกแค่ <strong>3 วัน</strong> แต่ Lead Time 10 วัน
+          </span>
+        </div>
+        <div class="chat-msg user">
+          <span class="en">Write a VBA macro that highlights these rows, copies REORDER items to a new "Urgent" sheet, and shows a count.</span>
+          <span class="th">เขียน VBA macro ที่ไฮไลท์แถวเหล่านี้ คัดลอกรายการ REORDER ไปยังชีทใหม่ "Urgent" และแสดงจำนวน</span>
+        </div>
+        <div class="chat-msg claude">
+          <div class="label">Claude</div>
+          <span class="en">Done. Here's a complete macro ready to paste into your VBA editor (Alt+F11 &rarr; Insert &rarr; Module):</span>
+          <span class="th">เสร็จแล้ว นี่คือ macro ที่พร้อมวางใน VBA editor (Alt+F11 &rarr; Insert &rarr; Module):</span>
+        </div>
+      </div>
+      <div class="sidebar-input"><div class="input-fake"><span class="en">Ask about your data&hellip;</span><span class="th">ถามเกี่ยวกับข้อมูลของคุณ&hellip;</span><div class="send-btn"></div></div></div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+      VBA Module &mdash; GenerateReorderAlerts()
+    </div>
+    <pre><span class="kw">Sub</span> <span class="fn">GenerateReorderAlerts</span>()
+    <span class="kw">Dim</span> <span class="var">ws</span> <span class="kw">As</span> Worksheet, <span class="var">alertSheet</span> <span class="kw">As</span> Worksheet
+    <span class="kw">Dim</span> <span class="var">lastRow</span> <span class="kw">As</span> Long, <span class="var">i</span> <span class="kw">As</span> Long, <span class="var">alertRow</span> <span class="kw">As</span> Long
+    
+    <span class="kw">Set</span> <span class="var">ws</span> = ThisWorkbook.Sheets(<span class="str">"Inventory"</span>)
+    <span class="var">lastRow</span> = <span class="var">ws</span>.Cells(<span class="var">ws</span>.Rows.Count, <span class="str">"A"</span>).End(xlUp).Row
+    
+    <span class="cm">' Create fresh Urgent Reorders sheet</span>
+    <span class="kw">Set</span> <span class="var">alertSheet</span> = ThisWorkbook.Sheets.Add
+    <span class="var">alertSheet</span>.Name = <span class="str">"Urgent Reorders"</span>
+    <span class="var">alertSheet</span>.Range(<span class="str">"A1"</span>).Value = <span class="str">"Urgent Reorders — "</span> &amp; Format(Date, <span class="str">"YYYY-MM-DD"</span>)
+    <span class="var">alertRow</span> = <span class="num">3</span>
+    
+    <span class="kw">For</span> <span class="var">i</span> = <span class="num">2</span> <span class="kw">To</span> <span class="var">lastRow</span>
+        <span class="kw">Select Case</span> <span class="var">ws</span>.Cells(<span class="var">i</span>, <span class="num">9</span>).Value
+            <span class="kw">Case</span> <span class="str">"REORDER NOW"</span>
+                <span class="var">ws</span>.Rows(<span class="var">i</span>).Interior.Color = RGB(<span class="num">255</span>, <span class="num">200</span>, <span class="num">200</span>)  <span class="cm">' Red highlight</span>
+                <span class="var">ws</span>.Rows(<span class="var">i</span>).Copy <span class="var">alertSheet</span>.Range(<span class="str">"A"</span> &amp; <span class="var">alertRow</span>)
+                <span class="var">alertRow</span> = <span class="var">alertRow</span> + <span class="num">1</span>
+            <span class="kw">Case</span> <span class="str">"LOW STOCK"</span>
+                <span class="var">ws</span>.Rows(<span class="var">i</span>).Interior.Color = RGB(<span class="num">255</span>, <span class="num">255</span>, <span class="num">200</span>)  <span class="cm">' Yellow highlight</span>
+        <span class="kw">End Select</span>
+    <span class="kw">Next</span> <span class="var">i</span>
+    
+    MsgBox <span class="var">alertRow</span> - <span class="num">3</span> &amp; <span class="str">" items need urgent reordering."</span>, vbInformation
+<span class="kw">End Sub</span></pre>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big">500 SKUs</div>
+      <div class="desc"><span class="en">Checked automatically<br>in 10 seconds flat</span><span class="th">ตรวจสอบอัตโนมัติ<br>ใน 10 วินาที</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big"><span class="en">30 min</span><span class="th">30 นาที</span></div>
+      <div class="desc"><span class="en">Saved every morning<br>= 130 hours/year</span><span class="th">ประหยัดทุกเช้า<br>= 130 ชั่วโมง/ปี</span></div>
+    </div>
+    <div class="impact-item">
+      <div class="big"><span class="en">$0 lost</span><span class="th">฿0 สูญเสีย</span></div>
+      <div class="desc"><span class="en">No missed reorders<br>no surprise stockouts</span><span class="th">ไม่พลาดการสั่งซื้อ<br>ไม่มีสินค้าขาดสต็อก</span></div>
+    </div>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="workflow-step" data-step="1">
+      <h4><span class="en">Define the Logic</span><span class="th">กำหนดตรรกะ</span></h4>
+      <p><span class="en">"Calculate reorder point using daily sales, lead time, and a 1.5&times; safety factor."</span><span class="th">"คำนวณจุดสั่งซื้อจากยอดขายรายวัน, Lead Time และค่าความปลอดภัย 1.5 เท่า"</span></p>
+    </div>
+    <div class="workflow-step" data-step="2">
+      <h4><span class="en">Add Intelligence</span><span class="th">เพิ่มความฉลาด</span></h4>
+      <p><span class="en">Claude builds status flags, days-of-stock calculations, and immediately spots urgent items.</span><span class="th">Claude สร้างแฟล็กสถานะ คำนวณจำนวนวันที่เหลือ และระบุสินค้าเร่งด่วนทันที</span></p>
+    </div>
+    <div class="workflow-step" data-step="3">
+      <h4><span class="en">Automate It</span><span class="th">ทำให้อัตโนมัติ</span></h4>
+      <p><span class="en">Request a VBA macro: Claude writes production-ready code that highlights, copies, and alerts.</span><span class="th">ขอ VBA macro: Claude เขียนโค้ดพร้อมใช้ที่ไฮไลท์ คัดลอก และแจ้งเตือน</span></p>
+    </div>
+    <div class="workflow-step" data-step="4">
+      <h4><span class="en">Run Daily</span><span class="th">ใช้ทุกวัน</span></h4>
+      <p><span class="en">One click each morning. Red flags appear instantly. No manual scrolling. No missed reorders.</span><span class="th">คลิกเดียวทุกเช้า แฟล็กแดงปรากฏทันที ไม่ต้องเลื่อนดูเอง ไม่พลาดการสั่งซื้อ</span></p>
+    </div>
+  </div>
+
+  <div class="exec-quote">
+    <p><span class="en">We went from spending 30 minutes every morning eyeballing stock levels to running a one-click macro that highlights every critical item in 10 seconds. Claude didn't just write the formula&mdash;it built the entire alert system, including the VBA automation, in a single conversation.</span><span class="th">เราเปลี่ยนจากการใช้เวลา 30 นาทีทุกเช้าดูระดับสต็อกด้วยตา มาเป็นการรัน macro คลิกเดียวที่ไฮไลท์ทุกรายการวิกฤตใน 10 วินาที Claude ไม่ได้แค่เขียนสูตร&mdash;แต่สร้างระบบแจ้งเตือนทั้งหมด รวมถึง VBA อัตโนมัติ ในการสนทนาครั้งเดียว</span></p>
+    <div class="attribution"><span class="en">&mdash; The value proposition for inventory management teams</span><span class="th">&mdash; คุณค่าสำหรับทีมจัดการสินค้าคงคลัง</span></div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section">
+  <h2>
+    <span class="en">Ready to <span>Transform</span> Your Retail Operations?</span>
+    <span class="th">พร้อม<span>ยกระดับ</span>การดำเนินงานค้าปลีกของคุณแล้วหรือยัง?</span>
+  </h2>
+  <p>
+    <span class="en">Claude Cowork turns every team member into a data expert. No training required&mdash;just describe what you need in plain English.</span>
+    <span class="th">Claude Cowork เปลี่ยนทุกคนในทีมให้เป็นผู้เชี่ยวชาญข้อมูล ไม่ต้องอบรม&mdash;แค่อธิบายสิ่งที่ต้องการเป็นภาษาพูด</span>
+  </p>
+  <div class="cta-buttons">
+    <a href="https://claude.com/claude-for-excel" class="cta-btn primary">
+      <span class="en">Get Claude for Excel</span>
+      <span class="th">รับ Claude สำหรับ Excel</span>
+    </a>
+    <a href="https://claude.com/resources/tutorials/getting-started-with-claude-in-excel" class="cta-btn secondary">
+      <span class="en">Watch the Tutorial</span>
+      <span class="th">ดูบทเรียน</span>
+    </a>
+  </div>
+  <br><br>
+  <div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:10px;">
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:var(--terra-light);">85%</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);"><span class="en">Less time on data cleanup</span><span class="th">ประหยัดเวลาทำความสะอาดข้อมูล</span></div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:var(--terra-light);">130 hrs</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);"><span class="en">Saved per year on stock checks</span><span class="th">ประหยัดต่อปีจากการตรวจสต็อก</span></div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:28px;font-weight:800;color:var(--terra-light);">Zero</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);"><span class="en">Excel expertise required</span><span class="th">ไม่ต้องมีความเชี่ยวชาญ Excel</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span class="en">Claude Cowork for Excel &mdash; Retail Intelligence Sales Material &nbsp;|&nbsp; Prepared March 2026 &nbsp;|&nbsp; Powered by Anthropic</span>
+  <span class="th">Claude Cowork สำหรับ Excel &mdash; สื่อการขายสำหรับธุรกิจค้าปลีก &nbsp;|&nbsp; จัดทำ มีนาคม 2026 &nbsp;|&nbsp; ขับเคลื่อนโดย Anthropic</span>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-th').classList.toggle('active', lang === 'th');
+  document.documentElement.lang = lang;
+  localStorage.setItem('preferred-lang', lang);
+}
+
+function showTab(example, tab) {
+  const prefix = example + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(el => el.classList.remove('active'));
+  document.getElementById(prefix + tab).classList.add('active');
+  if (example === 'e1') {
+    const section = document.getElementById('example1');
+    const tabs = section.querySelectorAll('.mockup-tab');
+    tabs.forEach(t => t.classList.remove('active'));
+    const tabMap = {'audit': 0, 'fix': 1, 'result': 2};
+    if (tabs[tabMap[tab]]) tabs[tabMap[tab]].classList.add('active');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('preferred-lang');
+  if (saved) setLang(saved);
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.mockup-container, .impact-box, .workflow-steps, .exec-quote, .code-block, .before-after').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+});
+</script>
+</body>
+</html>
