@@ -1,9 +1,7 @@
-FROM nginx:alpine
+FROM busybox:latest
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY ["Claude Cowork Excel - Sales Material.html", "/usr/share/nginx/html/"]
-COPY ["Claude Cowork Excel - Sales Material.html", "/usr/share/nginx/html/index.html"]
+COPY ["Claude Cowork Excel - Sales Material.html", "/www/index.html"]
 
-EXPOSE 80
+EXPOSE 4008
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["httpd", "-f", "-p", "4008", "-h", "/www"]
