@@ -14,15 +14,15 @@ cd "$(dirname "$0")"
 
 echo ""
 echo "[1/4] Stopping existing container (if any)..."
-docker compose down 2>/dev/null || docker-compose down 2>/dev/null || true
+docker compose down 2>/dev/null || true
 
 echo ""
 echo "[2/4] Building Docker image..."
-docker compose build --no-cache 2>/dev/null || docker-compose build --no-cache
+docker compose build --no-cache
 
 echo ""
 echo "[3/4] Starting container on port $PORT..."
-docker compose up -d 2>/dev/null || docker-compose up -d
+docker compose up -d
 
 echo ""
 echo "[4/4] Verifying deployment..."
