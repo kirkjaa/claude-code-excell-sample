@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Cowork × LDC Import-Export Group — AI-Powered Retail Intelligence</title>
+<style>
+  :root {
+    --terra: #D97757;
+    --terra-light: #E8956F;
+    --terra-dark: #B85E3F;
+    --beige: #FAF6F1;
+    --beige-mid: #F0E8DF;
+    --beige-dark: #E0D5C8;
+    --ink: #1E1E2A;
+    --ink-light: #4A4A5A;
+    --ink-muted: #8A8A9A;
+    --white: #FFFFFF;
+    --success: #2E7D4F;
+    --success-bg: #E8F5E9;
+    --warning: #E67E22;
+    --warning-bg: #FFF8E1;
+    --danger: #C0392B;
+    --danger-bg: #FDEDEC;
+    --excel-green: #217346;
+    --excel-header: #E2EFDA;
+    --excel-grid: #D4D4D4;
+    --claude-bg: #F9F5F1;
+    --sidebar-border: #E8DDD0;
+    --ldc-blue: #1A3A6B;
+    --jiffy-red: #E02020;
+    --skycool-blue: #0066CC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--beige);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: linear-gradient(135deg, #0D1B35 0%, #1A3A6B 50%, #2A2830 100%);
+    color: var(--white);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -15%;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,87,0.12) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,58,107,0.3) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(217,119,87,0.2);
+    border: 1px solid rgba(217,119,87,0.4);
+    color: var(--terra-light);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 820px;
+    margin: 0 auto 20px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 span { color: var(--terra-light); }
+  .hero p {
+    font-size: 19px;
+    color: rgba(255,255,255,0.75);
+    max-width: 660px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+    position: relative; z-index: 1;
+  }
+  .hero-cta {
+    display: inline-block;
+    background: var(--terra);
+    color: var(--white);
+    padding: 14px 36px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative; z-index: 1;
+  }
+  .hero-cta:hover { background: var(--terra-light); transform: translateY(-1px); }
+  .hero-context {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .hero-stat {
+    text-align: center;
+    opacity: 0.9;
+  }
+  .hero-stat .num {
+    font-size: 28px; font-weight: 800; color: var(--terra-light);
+  }
+  .hero-stat .lbl {
+    font-size: 12px; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px;
+  }
+
+  /* ============ ROI BAR ============ */
+  .roi-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    max-width: 1100px;
+    margin: -40px auto 0;
+    position: relative;
+    z-index: 10;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .roi-card {
+    background: var(--white);
+    padding: 32px 24px;
+    text-align: center;
+    border-right: 1px solid var(--beige-mid);
+  }
+  .roi-card:last-child { border-right: none; }
+  .roi-number { font-size: 40px; font-weight: 800; color: var(--terra); line-height: 1.1; }
+  .roi-label {
+    font-size: 12px; font-weight: 600; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-top: 6px;
+  }
+
+  /* ============ SUBSIDIARY STRIP ============ */
+  .subs-strip {
+    max-width: 1100px;
+    margin: 80px auto 0;
+    padding: 0 40px;
+  }
+  .subs-strip h3 {
+    font-size: 14px; font-weight: 700; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    text-align: center; margin-bottom: 24px;
+  }
+  .subs-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  .sub-card {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 12px;
+    padding: 20px 14px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .sub-card:hover { border-color: var(--terra); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(217,119,87,0.1); }
+  .sub-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 10px;
+  }
+  .sub-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .sub-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.4; }
+
+  /* ============ SECTION WRAPPER ============ */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--terra);
+    color: var(--white);
+    font-weight: 700; font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .section-header h2 { font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+  .section-header p { font-size: 18px; color: var(--ink-light); max-width: 620px; margin: 0 auto; }
+
+  /* ============ TIME SAVINGS PILL ============ */
+  .time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--success-bg);
+    border: 1px solid #A5D6A7;
+    color: var(--success);
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 14px; font-weight: 600;
+    margin-top: 16px;
+  }
+  .time-pill .clock { font-size: 16px; }
+
+  /* ============ EXCEL + SIDEBAR MOCKUP ============ */
+  .mockup-container {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    border: 1px solid var(--excel-grid);
+  }
+  .mockup-container.stacked {
+    grid-template-columns: 1fr;
+  }
+  .mockup-container.stacked .claude-sidebar {
+    border-left: none;
+    border-top: 1px solid var(--sidebar-border);
+    max-height: none;
+  }
+  .mockup-container.stacked .sidebar-chat {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .excel-panel { background: var(--white); }
+  .excel-titlebar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: var(--excel-green);
+    color: var(--white); font-size: 13px; font-weight: 500;
+  }
+  .excel-titlebar .dots { display: flex; gap: 5px; }
+  .excel-titlebar .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+  .excel-ribbon {
+    display: flex; padding: 0;
+    background: #F3F3F3;
+    border-bottom: 1px solid var(--excel-grid);
+    font-size: 12px;
+  }
+  .ribbon-tab { padding: 8px 16px; color: var(--ink-light); cursor: default; border-bottom: 2px solid transparent; }
+  .ribbon-tab.active { color: var(--excel-green); border-bottom: 2px solid var(--excel-green); font-weight: 600; }
+  .formula-bar {
+    display: flex; align-items: center;
+    padding: 4px 8px;
+    background: var(--white);
+    border-bottom: 1px solid var(--excel-grid);
+    font-size: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+  }
+  .formula-bar .cell-ref {
+    background: #F0F0F0; padding: 2px 8px;
+    border: 1px solid var(--excel-grid); margin-right: 8px;
+    font-weight: 600; min-width: 50px; text-align: center; font-size: 11px;
+  }
+  .formula-bar .fx { color: var(--ink-muted); margin-right: 8px; font-style: italic; }
+  .formula-bar .formula-text { color: var(--ink); }
+
+  .excel-grid { width: 100%; overflow-x: auto; }
+  .excel-grid table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .excel-grid th {
+    background: #F8F8F8; border: 1px solid var(--excel-grid);
+    padding: 4px 10px; font-weight: 600; color: var(--ink-light);
+    text-align: center; font-size: 11px; position: sticky; top: 0;
+  }
+  .excel-grid th.col-header { background: #E8E8E8; min-width: 70px; }
+  .excel-grid th.row-num { background: #F0F0F0; width: 30px; min-width: 30px; color: var(--ink-muted); font-weight: 500; }
+  .excel-grid td { border: 1px solid #E0E0E0; padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+  .mockup-container.stacked .excel-grid th.col-header { min-width: 55px; }
+  .mockup-container.stacked .excel-grid td { padding: 3px 6px; font-size: 11.5px; }
+  .excel-grid tr.header-row td { background: var(--excel-header); font-weight: 700; color: var(--ink); font-size: 11px; }
+
+  .cell-error { background: #FDE8E8; color: var(--danger); }
+  .cell-warning { background: #FFF3CD; }
+  .cell-fixed { background: #D4EDDA; color: var(--success); font-weight: 600; }
+  .cell-blank { background: #FFF0F0; }
+  .cell-duplicate { background: #FCE4EC; }
+  .cell-formula { background: #E3F2FD; font-family: 'Consolas', monospace; font-size: 11px; }
+  .cell-highlight { background: #E8F5E9; }
+  .cell-critical { background: #FDEDEC; color: var(--danger); font-weight: 700; }
+
+  .status-reorder, .status-low, .status-ok {
+    display: inline-block; color: var(--white);
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .status-reorder { background: var(--danger); }
+  .status-low { background: var(--warning); }
+  .status-ok { background: var(--success); }
+
+  .row-danger td { background: #FDEDEC !important; }
+  .row-warning td { background: #FFF8E1 !important; }
+  .row-ok td { background: #E8F5E9 !important; }
+
+  .claude-sidebar {
+    background: var(--claude-bg);
+    border-left: 1px solid var(--sidebar-border);
+    display: flex; flex-direction: column;
+  }
+  .sidebar-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: var(--white);
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  .claude-logo {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--terra);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-weight: 800; font-size: 14px;
+  }
+  .sidebar-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .sidebar-subtitle { font-size: 11px; color: var(--ink-muted); }
+  .sidebar-chat {
+    flex: 1; padding: 16px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .chat-msg { max-width: 95%; font-size: 12.5px; line-height: 1.55; }
+  .chat-msg.user {
+    align-self: flex-end;
+    background: var(--terra); color: var(--white);
+    padding: 10px 14px;
+    border-radius: 14px 14px 4px 14px;
+  }
+  .chat-msg.claude {
+    align-self: flex-start;
+    background: var(--white); color: var(--ink);
+    padding: 12px 14px;
+    border-radius: 14px 14px 14px 4px;
+    border: 1px solid var(--sidebar-border);
+  }
+  .chat-msg.claude .label {
+    font-size: 10px; font-weight: 700; color: var(--terra);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
+  }
+  .chat-msg.claude code {
+    display: block;
+    background: #F5F0EB; padding: 8px 10px;
+    border-radius: 6px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 11.5px; margin: 8px 0;
+    color: var(--terra-dark); overflow-x: auto;
+  }
+  .chat-msg.claude .cell-cite {
+    display: inline;
+    background: #EDE7E0; padding: 1px 5px; border-radius: 3px;
+    font-family: 'Consolas', monospace; font-size: 11px;
+    color: var(--terra-dark); font-weight: 600;
+  }
+  .chat-msg.claude ul { margin: 6px 0 2px 16px; font-size: 12px; }
+  .chat-msg.claude li { margin-bottom: 4px; }
+  .chat-msg.claude strong { color: var(--ink); }
+
+  .sidebar-input { padding: 12px 16px; border-top: 1px solid var(--sidebar-border); background: var(--white); }
+  .input-fake {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--beige-dark); border-radius: 8px;
+    padding: 10px 12px; font-size: 12px; color: var(--ink-muted);
+  }
+  .input-fake .send-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--terra);
+    display: flex; align-items: center; justify-content: center;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .input-fake .send-btn::after {
+    content: ''; width: 0; height: 0;
+    border-left: 7px solid var(--white);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    margin-left: 2px;
+  }
+
+  /* ============ WORKFLOW STEPS ============ */
+  .workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px; margin-top: 32px;
+  }
+  .workflow-step {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 12px; padding: 24px; position: relative;
+  }
+  .workflow-step::before {
+    content: attr(data-step);
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--terra); color: var(--white);
+    font-weight: 700; font-size: 14px; margin-bottom: 12px;
+  }
+  .workflow-step h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .workflow-step p { font-size: 13px; color: var(--ink-light); line-height: 1.5; }
+
+  /* ============ BEFORE/AFTER ============ */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px; align-items: start; margin: 32px 0;
+  }
+  .ba-panel { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--beige-dark); }
+  .ba-label { padding: 10px 16px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+  .ba-label.before { background: var(--danger-bg); color: var(--danger); }
+  .ba-label.after { background: var(--success-bg); color: var(--success); }
+  .ba-arrow { display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--terra); padding-top: 60px; font-weight: 300; }
+  .ba-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ba-table th { background: #F5F5F5; padding: 6px 10px; font-weight: 600; font-size: 11px; text-align: left; border-bottom: 1px solid #E0E0E0; }
+  .ba-table td { padding: 5px 10px; border-bottom: 1px solid #F0F0F0; }
+
+  /* ============ IMPACT BOX ============ */
+  .impact-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin: 32px 0;
+  }
+  .impact-item {
+    background: var(--white); border: 1px solid var(--beige-dark);
+    border-radius: 10px; padding: 24px; text-align: center;
+  }
+  .impact-item .big { font-size: 32px; font-weight: 800; color: var(--terra); line-height: 1.1; }
+  .impact-item .desc { font-size: 13px; color: var(--ink-light); margin-top: 6px; }
+
+  /* ============ TABS ============ */
+  .mockup-tabs { display: flex; gap: 0; margin-bottom: 0; }
+  .mockup-tab {
+    padding: 10px 24px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border-radius: 8px 8px 0 0;
+    border: 1px solid transparent;
+    color: var(--ink-muted); background: var(--beige-mid);
+    transition: all 0.2s; position: relative; bottom: -1px;
+  }
+  .mockup-tab.active { background: var(--white); color: var(--terra); border: 1px solid var(--excel-grid); border-bottom-color: var(--white); }
+  .mockup-content { display: none; }
+  .mockup-content.active { display: block; }
+
+  /* ============ SCENARIO BOX ============ */
+  .scenario-box {
+    background: var(--white);
+    border-left: 4px solid var(--terra);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px; margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .scenario-box .scene-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--terra); margin-bottom: 6px;
+  }
+  .scenario-box p { font-size: 14px; color: var(--ink-light); line-height: 1.6; }
+
+  /* ============ USE CASES SECTION ============ */
+  .use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px; margin-top: 40px;
+  }
+  .use-case-card {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 14px; padding: 28px;
+    transition: all 0.2s;
+  }
+  .use-case-card:hover { border-color: var(--terra); box-shadow: 0 4px 20px rgba(217,119,87,0.1); }
+  .use-case-unit {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--terra);
+    margin-bottom: 12px;
+  }
+  .use-case-card h4 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .use-case-card p { font-size: 13px; color: var(--ink-light); line-height: 1.5; margin-bottom: 14px; }
+  .use-case-prompt {
+    background: var(--beige);
+    border: 1px solid var(--beige-dark);
+    border-radius: 8px; padding: 12px 14px;
+    font-size: 12px; color: var(--ink-light);
+    font-style: italic; line-height: 1.5;
+  }
+  .use-case-prompt::before {
+    content: '"';
+    font-style: normal; color: var(--terra);
+    font-size: 16px; font-weight: 700; margin-right: 2px;
+  }
+  .use-case-prompt::after {
+    content: '"';
+    font-style: normal; color: var(--terra);
+    font-size: 16px; font-weight: 700; margin-left: 2px;
+  }
+
+  /* ============ SECTION DIVIDER ============ */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--beige-dark), transparent);
+    max-width: 1020px; margin: 0 auto;
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    background: linear-gradient(135deg, #0D1B35 0%, #1A3A6B 50%, #2A2830 100%);
+    color: var(--white); text-align: center; padding: 80px 40px;
+  }
+  .cta-section h2 { font-size: 36px; font-weight: 700; margin-bottom: 16px; }
+  .cta-section h2 span { color: var(--terra-light); }
+  .cta-section p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 580px; margin: 0 auto 36px; }
+  .cta-agenda {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px; max-width: 800px; margin: 0 auto 40px;
+    text-align: left;
+  }
+  .cta-day {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 24px;
+  }
+  .cta-day h4 { font-size: 14px; font-weight: 700; color: var(--terra-light); margin-bottom: 12px; }
+  .cta-day ul { list-style: none; }
+  .cta-day li { font-size: 13px; color: rgba(255,255,255,0.75); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .cta-day li::before { content: '→  '; color: var(--terra-light); }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn {
+    display: inline-block; padding: 14px 32px;
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+  }
+  .cta-btn.primary { background: var(--terra); color: var(--white); }
+  .cta-btn.primary:hover { background: var(--terra-light); }
+  .cta-btn.secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.25); }
+  .cta-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+
+  /* ============ FOOTER ============ */
+  .footer { text-align: center; padding: 32px 40px; font-size: 12px; color: var(--ink-muted); background: var(--beige); }
+
+  /* ============ CODE BLOCK ============ */
+  .code-block {
+    background: #1E1E2A; border-radius: 10px;
+    overflow: hidden; margin: 20px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .code-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; background: #2A2A3E;
+    font-size: 12px; color: rgba(255,255,255,0.5);
+  }
+  .code-header .dots { display: flex; gap: 5px; }
+  .code-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-header .dot.r { background: #FF5F57; }
+  .code-header .dot.y { background: #FFBD2E; }
+  .code-header .dot.g { background: #28CA42; }
+  .code-block pre {
+    padding: 16px 20px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px; line-height: 1.6;
+    color: #D4D4D4; overflow-x: auto; white-space: pre;
+  }
+  .code-block .kw { color: #C586C0; }
+  .code-block .fn { color: #DCDCAA; }
+  .code-block .str { color: #CE9178; }
+  .code-block .cm { color: #6A9955; }
+  .code-block .num { color: #B5CEA8; }
+  .code-block .var { color: #9CDCFE; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .mockup-container { grid-template-columns: 1fr; }
+    .claude-sidebar { min-height: 400px; }
+    .roi-bar { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 32px; }
+    .before-after { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); padding: 0; }
+    .impact-box { grid-template-columns: 1fr; }
+    .subs-grid { grid-template-columns: repeat(3, 1fr); }
+    .cta-agenda { grid-template-columns: 1fr; }
+    .hero-context { gap: 20px; }
+  }
+  @media (max-width: 600px) {
+    .subs-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 26px; }
+    .section { padding: 60px 20px; }
+  }
+  @media print {
+    .hero { padding: 40px 20px 30px; }
+    .mockup-container { box-shadow: none; border: 1px solid #ddd; }
+    .section { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-badge">Claude Cowork &times; LDC Import-Export Group</div>
+  <h1>How <span>LDC's 33 Branches, 6 Subsidiaries</span> Run Smarter with Claude Cowork</h1>
+  <p>Three real-world scenarios — from Jiffy daily sales cleanup to group-wide CEO dashboards — showing exactly how Claude transforms LDC's retail and distribution operations.</p>
+  <a href="#example1" class="hero-cta">See It In Action &darr;</a>
+  <div class="hero-context">
+    <div class="hero-stat"><div class="num">33</div><div class="lbl">Jiffy Branches</div></div>
+    <div class="hero-stat"><div class="num">6</div><div class="lbl">Business Units</div></div>
+    <div class="hero-stat"><div class="num">400+</div><div class="lbl">Staff Members</div></div>
+    <div class="hero-stat"><div class="num">6</div><div class="lbl">Provinces Served</div></div>
+    <div class="hero-stat"><div class="num">100+</div><div class="lbl">SkyCool Dealers</div></div>
+  </div>
+</section>
+
+<!-- ============ ROI BAR ============ -->
+<div class="roi-bar">
+  <div class="roi-card">
+    <div class="roi-number">33→1</div>
+    <div class="roi-label">Branches Merged<br>Into One Report</div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">15 min</div>
+    <div class="roi-label">Full Inventory<br>Alert Check</div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">6 units</div>
+    <div class="roi-label">Group BI Dashboard<br>Generated Instantly</div>
+  </div>
+  <div class="roi-card">
+    <div class="roi-number">Zero</div>
+    <div class="roi-label">VBA or Specialist<br>Skills Required</div>
+  </div>
+</div>
+
+<!-- ============ SUBSIDIARY STRIP ============ -->
+<div class="subs-strip">
+  <h3>Claude Cowork Works Across Every LDC Business Unit</h3>
+  <div class="subs-grid">
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#FDE8E8;">🏪</div>
+      <div class="sub-name">Jiffy</div>
+      <div class="sub-desc">33-branch POS analysis & inventory management</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#FFF8E1;">🥐</div>
+      <div class="sub-name">Zaap by B</div>
+      <div class="sub-desc">Food production planning & sell-through tracking</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#E3F2FD;">❄️</div>
+      <div class="sub-name">SkyCool</div>
+      <div class="sub-desc">Dealer performance tracking & sales targets</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#E8F5E9;">🔧</div>
+      <div class="sub-name">CR Service</div>
+      <div class="sub-desc">B2B service contract & maintenance scheduling</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#F3E5F5;">🍽️</div>
+      <div class="sub-name">Gourmet</div>
+      <div class="sub-desc">Restaurant COGS analysis & ingredient ordering</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-icon" style="background:#E8EAF6;">🛒</div>
+      <div class="sub-name">Ants E-Com</div>
+      <div class="sub-desc">Launch metrics, GMV tracking & seller onboarding</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== EXAMPLE 1 ============================== -->
+<section class="section" id="example1">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>Jiffy Multi-Branch Daily Sales Cleanup</h2>
+    <p>From 33 messy branch files to a single analysis-ready report — in one conversation</p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      Before: 3&ndash;4 hours manual consolidation &nbsp;|&nbsp; After: 20 minutes
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label">The Scenario</div>
+    <p>Every morning, Jiffy branch managers across 6 provinces send their daily POS export files via LINE or email. Files arrive with inconsistent product names (some in Lao, some in English), different date formats depending on which POS system the branch uses, duplicate transaction entries from connectivity issues, and blank quantity fields when the scanner fails. The Vientiane operations team manually consolidates and fixes all 33 files before any reporting can happen — a process that consumes most of the morning.</p>
+  </div>
+
+  <div class="mockup-tabs">
+    <div class="mockup-tab active" onclick="showTab('e1','audit')">Step 1: Audit</div>
+    <div class="mockup-tab" onclick="showTab('e1','fix')">Step 2: Fix &amp; Formula</div>
+    <div class="mockup-tab" onclick="showTab('e1','result')">Step 3: Clean Result</div>
+  </div>
+
+  <!-- AUDIT TAB -->
+  <div class="mockup-content active" id="e1-audit">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Jiffy_Sales_LPB_2026-04-07.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div>
+          <div class="ribbon-tab">Insert</div>
+          <div class="ribbon-tab">Data</div>
+          <div class="ribbon-tab">View</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">A1</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">Trans_ID</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">E</th>
+                <th class="col-header">F</th>
+                <th class="col-header">G</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Trans_ID</td><td>Date</td><td>Product</td><td>Category</td><td>Qty</td><td>Price (LAK)</td><td>Branch</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td class="cell-duplicate">LP-001</td>
+                <td class="cell-warning">2026-04-07</td>
+                <td>Pepsi 330ml</td>
+                <td class="cell-error">beverages</td>
+                <td>12</td><td>8,000</td>
+                <td>Jiffy LP Talat</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>LP-002</td>
+                <td class="cell-warning">07/04/2026</td>
+                <td class="cell-error">pepsi can 330</td>
+                <td class="cell-error">Bev</td>
+                <td>5</td><td>8,000</td>
+                <td>Jiffy LP Talat</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>LP-003</td>
+                <td class="cell-warning">April 7 2026</td>
+                <td>Red Bull 150ml</td>
+                <td class="cell-error">Energy drink</td>
+                <td class="cell-blank" style="text-align:center;font-style:italic;color:#C0392B;">&empty;</td>
+                <td>12,000</td>
+                <td>Jiffy LP Main</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td class="cell-duplicate">LP-001</td>
+                <td>2026-04-07</td>
+                <td>Pepsi 330ml</td>
+                <td class="cell-error">beverages</td>
+                <td>12</td><td>8,000</td>
+                <td>Jiffy LP Talat</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td>LP-004</td>
+                <td>2026-04-07</td>
+                <td class="cell-error">mama noodle pork</td>
+                <td class="cell-error">FOOD</td>
+                <td>8</td><td>7,000</td>
+                <td>Jiffy PTT LPB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div>
+            <div class="sidebar-title">Claude</div>
+            <div class="sidebar-subtitle">Reading Jiffy LPB workbook&hellip;</div>
+          </div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Review Sheet1 — Jiffy Luang Prabang daily sales. Identify all data quality issues: duplicates, inconsistent product names, missing values, and date format problems. List with row references.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            I've scanned all 5 data rows and found <strong>4 categories of issues</strong>:
+            <br><br>
+            <strong>&#x26A0; Duplicate Transaction</strong>
+            <ul><li>Rows <span class="cell-cite">2</span> and <span class="cell-cite">5</span> — Trans_ID LP-001 appears twice, identical data. Row 5 is the duplicate.</li></ul>
+            <strong>&#x26A0; Inconsistent Product Names</strong>
+            <ul>
+              <li><span class="cell-cite">C2</span> "Pepsi 330ml" vs <span class="cell-cite">C3</span> "pepsi can 330" — same SKU</li>
+              <li><span class="cell-cite">C6</span> "mama noodle pork" should be "Mama Noodles Pork 55g"</li>
+            </ul>
+            <strong>&#x26A0; Category Inconsistencies</strong>
+            <ul><li>4 variations found: "beverages", "Bev", "Energy drink", "FOOD" — need standard taxonomy</li></ul>
+            <strong>&#x26A0; Date Formats &amp; Missing Data</strong>
+            <ul>
+              <li>3 date formats: YYYY-MM-DD, DD/MM/YYYY, "April 7 2026"</li>
+              <li>Cell <span class="cell-cite">E4</span> (Qty for Red Bull) is blank — needs verification</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">
+            Ask about your Jiffy data&hellip;
+            <div class="send-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIX TAB -->
+  <div class="mockup-content" id="e1-fix">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Jiffy_Sales_LPB_2026-04-07.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div>
+          <div class="ribbon-tab">Insert</div>
+          <div class="ribbon-tab">Data</div>
+          <div class="ribbon-tab">View</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">H2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">=IF(COUNTIF($A$2:$A$100,A2)&gt;1,"DUPLICATE","OK")</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">E</th>
+                <th class="col-header">F</th>
+                <th class="col-header">G</th>
+                <th class="col-header" style="background:#E3F2FD;">H</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Trans_ID</td><td>Date</td><td>Product</td><td>Category</td><td>Qty</td><td>Price (LAK)</td><td>Branch</td>
+                <td class="cell-formula">Dup_Check</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td>LP-001</td><td>2026-04-07</td><td>Pepsi 330ml</td><td>beverages</td><td>12</td><td>8,000</td><td>Jiffy LP Talat</td>
+                <td class="cell-error" style="font-weight:700;">DUPLICATE</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>LP-002</td><td>07/04/2026</td><td class="cell-error">pepsi can 330</td><td class="cell-error">Bev</td><td>5</td><td>8,000</td><td>Jiffy LP Talat</td>
+                <td class="cell-fixed">OK</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>LP-003</td><td class="cell-warning">April 7 2026</td><td>Red Bull 150ml</td><td class="cell-error">Energy drink</td>
+                <td class="cell-blank" style="text-align:center;font-style:italic;color:#C0392B;">&empty;</td>
+                <td>12,000</td><td>Jiffy LP Main</td>
+                <td class="cell-fixed">OK</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td>LP-001</td><td>2026-04-07</td><td>Pepsi 330ml</td><td>beverages</td><td>12</td><td>8,000</td><td>Jiffy LP Talat</td>
+                <td class="cell-error" style="font-weight:700;">DUPLICATE</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td>LP-004</td><td>2026-04-07</td><td class="cell-error">mama noodle pork</td><td class="cell-error">FOOD</td><td>8</td><td>7,000</td><td>Jiffy PTT LPB</td>
+                <td class="cell-fixed">OK</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Generating fix formulas&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Give me the Excel formulas to fix all issues. Standardize dates to YYYY-MM-DD. Use these categories: Beverages, Energy Drinks, Food, Snacks, Beer. Flag duplicates. For missing Qty, show VERIFY.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            Here are the formulas for a new "Cleaned" sheet:
+            <br><br>
+            <strong>Duplicate detection (Col H):</strong>
+            <code>=IF(COUNTIF($A$2:$A$200,A2)&gt;1,"DUPLICATE","OK")</code>
+            <strong>Date standardization (Col I):</strong>
+            <code>=TEXT(DATEVALUE(B2),"YYYY-MM-DD")</code>
+            <strong>Category standardization (Col J):</strong>
+            <code>=IFS(OR(D2="beverages",D2="Bev",D2="Bevs"),"Beverages", OR(D2="Energy drink",D2="energy"),"Energy Drinks", OR(D2="FOOD",D2="food"),"Food", OR(D2="SNACKS",D2="Snack"),"Snacks", TRUE, D2)</code>
+            <strong>Missing Qty flag (Col K):</strong>
+            <code>=IF(E2="","VERIFY",E2)</code>
+            Drag all formulas down — I recommend filtering out DUPLICATE rows before analysis.
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">
+            Ask about your Jiffy data&hellip;
+            <div class="send-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT TAB -->
+  <div class="mockup-content" id="e1-result">
+    <div class="before-after">
+      <div class="ba-panel">
+        <div class="ba-label before">&#x2717; Before — Raw Luang Prabang Export</div>
+        <table class="ba-table">
+          <thead><tr><th>Date</th><th>Product</th><th>Category</th><th>Qty</th></tr></thead>
+          <tbody>
+            <tr><td style="background:#FFF3CD">2026-04-07</td><td>Pepsi 330ml</td><td class="cell-error" style="padding:5px 10px">beverages</td><td>12</td></tr>
+            <tr><td style="background:#FFF3CD">07/04/2026</td><td style="background:#FDE8E8">pepsi can 330</td><td class="cell-error" style="padding:5px 10px">Bev</td><td>5</td></tr>
+            <tr><td style="background:#FFF3CD">April 7 2026</td><td>Red Bull 150ml</td><td class="cell-error" style="padding:5px 10px">Energy drink</td><td style="background:#FFF0F0;text-align:center;font-style:italic;color:#aaa">&mdash;</td></tr>
+            <tr><td>2026-04-07</td><td style="background:#FDE8E8">LP-001 (DUPLICATE)</td><td style="background:#FDE8E8;padding:5px 10px">beverages</td><td>12</td></tr>
+            <tr><td>2026-04-07</td><td style="background:#FDE8E8">mama noodle pork</td><td class="cell-error" style="padding:5px 10px">FOOD</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ba-arrow">&rarr;</div>
+      <div class="ba-panel">
+        <div class="ba-label after">&#x2713; After — Claude Cleaned</div>
+        <table class="ba-table">
+          <thead><tr><th>Date</th><th>Product</th><th>Category</th><th>Qty</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-04-07</td><td class="cell-fixed" style="padding:5px 10px">Pepsi 330ml</td><td class="cell-fixed" style="padding:5px 10px">Beverages</td><td>12</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-04-07</td><td class="cell-fixed" style="padding:5px 10px">Pepsi 330ml</td><td class="cell-fixed" style="padding:5px 10px">Beverages</td><td>5</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-04-07</td><td class="cell-fixed" style="padding:5px 10px">Red Bull 150ml</td><td class="cell-fixed" style="padding:5px 10px">Energy Drinks</td><td style="background:#FFF8E1;font-weight:600;">VERIFY</td></tr>
+            <tr style="opacity:0.4"><td>—</td><td>LP-001 removed</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-fixed" style="padding:5px 10px">2026-04-07</td><td class="cell-fixed" style="padding:5px 10px">Mama Noodles Pork 55g</td><td class="cell-fixed" style="padding:5px 10px">Food</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big">33 files</div>
+      <div class="desc">Consolidated from all provinces<br>in a single session</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">20 min</div>
+      <div class="desc">vs. 3–4 hours manual work<br>every single morning</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">100%</div>
+      <div class="desc">Consistent product taxonomy<br>ready for pivot analysis</div>
+    </div>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="workflow-step" data-step="1">
+      <h4>Open Any Branch File</h4>
+      <p>Open the Jiffy branch file in Excel. Click the Claude sidebar. Claude instantly reads the workbook structure.</p>
+    </div>
+    <div class="workflow-step" data-step="2">
+      <h4>Ask Claude to Audit</h4>
+      <p>Type "review this file for data quality issues" — Claude lists every problem with exact cell references and explains why each is an issue.</p>
+    </div>
+    <div class="workflow-step" data-step="3">
+      <h4>Get Fix Formulas</h4>
+      <p>Ask for standardization formulas. Claude generates drag-down formulas for dates, categories, duplicate detection, and missing values.</p>
+    </div>
+    <div class="workflow-step" data-step="4">
+      <h4>Consolidate &amp; Report</h4>
+      <p>With all branches cleaned to the same standard, ask Claude to build a province-level summary pivot table automatically.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== EXAMPLE 2 ============================== -->
+<section class="section" id="example2">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <h2>Province-Aware Inventory Reorder Alert System</h2>
+    <p>Jiffy's distribution manager gets a daily reorder report — automatically prioritized by province lead time</p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      Before: Manual stock-check scanning every morning &nbsp;|&nbsp; After: One-click daily alert
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label">The Scenario</div>
+    <p>Jiffy branches in Attapeu and Pakse need 4–5 days lead time to receive stock from Vientiane's distribution center — but the same product at a Vientiane branch needs only 1 day. Currently, the distribution team manually reviews stock levels each morning, unaware of the province-specific urgency until a branch calls to say they've run out. Claude builds a reorder alert system where reorder points automatically factor in each branch's province lead time, and generates a daily priority list.</p>
+  </div>
+
+  <div class="mockup-tabs">
+    <div class="mockup-tab active" onclick="showTab('e2','points')">Step 1: Reorder Points</div>
+    <div class="mockup-tab" onclick="showTab('e2','status')">Step 2: Status Flags</div>
+    <div class="mockup-tab" onclick="showTab('e2','report')">Step 3: Alert Report</div>
+  </div>
+
+  <!-- REORDER POINTS TAB -->
+  <div class="mockup-content active" id="e2-points">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Jiffy_Stock_All_Branches_2026-04-07.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Formulas</div><div class="ribbon-tab">Data</div><div class="ribbon-tab">View</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">H2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">=E2*F2*1.5</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">E</th>
+                <th class="col-header">F</th>
+                <th class="col-header" style="background:#E3F2FD;">G (Days Stk)</th>
+                <th class="col-header" style="background:#E3F2FD;">H (Reorder Pt)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>SKU</td><td>Product</td><td>Province</td><td>Stock</td>
+                <td>Avg Daily Sales</td><td>Lead Time (d)</td>
+                <td class="cell-formula">Days of Stock</td>
+                <td class="cell-formula">Reorder Point</td>
+              </tr>
+              <tr class="row-warning">
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Vientiane</td><td>48</td><td>38</td><td>1</td>
+                <td class="cell-formula">1.3</td><td class="cell-formula">57</td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Luang Prabang</td><td>15</td><td>12</td><td>2</td>
+                <td class="cell-formula">1.3</td><td class="cell-formula">36</td>
+              </tr>
+              <tr class="row-ok">
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>JF-002</td><td>Pepsi 330ml</td><td>Savannakhet</td><td>210</td><td>28</td><td>3</td>
+                <td class="cell-formula">7.5</td><td class="cell-formula">126</td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td>JF-003</td><td>Mama Noodles Pork</td><td>Pakse</td><td>18</td><td>22</td><td>4</td>
+                <td class="cell-formula">0.8</td><td class="cell-formula">132</td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Attapeu</td><td>8</td><td>9</td><td>5</td>
+                <td class="cell-formula">0.9</td><td class="cell-formula">68</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Analyzing stock levels&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Column G should show Days of Stock (Stock ÷ Avg Daily Sales, or "No Sales" if zero). Column H should be the Reorder Point using: Avg Daily Sales × Lead Time × 1.5 safety factor. Write both formulas for row 2.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            Here are both formulas for row 2:
+            <br><br>
+            <strong>G2 — Days of Stock:</strong>
+            <code>=IF(E2=0,"No Sales Data",ROUND(D2/E2,1))</code>
+            <strong>H2 — Reorder Point (with 1.5× safety):</strong>
+            <code>=E2*F2*1.5</code>
+            <br>
+            The 1.5× safety factor gives Attapeu branches an extra buffer since a missed reorder means 5 days without stock — much more critical than Vientiane where same-day restocking is possible.
+            <br><br>
+            <strong>Key observation:</strong> Red Bull in Attapeu (<span class="cell-cite">D6</span>=8) has only 0.9 days of stock but a 5-day lead time. This needs urgent action.
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about stock levels&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS FLAGS TAB -->
+  <div class="mockup-content" id="e2-status">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Jiffy_Stock_All_Branches_2026-04-07.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Formulas</div><div class="ribbon-tab">Data</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">I2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">=IF(D2&lt;H2,"REORDER NOW",IF(D2&lt;H2*1.5,"LOW STOCK","OK"))</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">G</th>
+                <th class="col-header">H</th>
+                <th class="col-header" style="background:#E3F2FD;">I (Status)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>SKU</td><td>Product</td><td>Province</td>
+                <td>Stock</td><td>Days of Stock</td><td>Reorder Pt</td>
+                <td class="cell-formula">Status</td>
+              </tr>
+              <tr class="row-warning">
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Vientiane</td>
+                <td>48</td><td>1.3</td><td>57</td>
+                <td><span class="status-low">LOW STOCK</span></td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Luang Prabang</td>
+                <td>15</td><td>1.3</td><td>36</td>
+                <td><span class="status-reorder">REORDER NOW</span></td>
+              </tr>
+              <tr class="row-ok">
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>JF-002</td><td>Pepsi 330ml</td><td>Savannakhet</td>
+                <td>210</td><td>7.5</td><td>126</td>
+                <td><span class="status-ok">OK</span></td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td>JF-003</td><td>Mama Noodles Pork</td><td>Pakse</td>
+                <td>18</td><td>0.8</td><td>132</td>
+                <td><span class="status-reorder">REORDER NOW</span></td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td>JF-001</td><td>Red Bull 150ml</td><td>Attapeu</td>
+                <td>8</td><td>0.9</td><td>68</td>
+                <td><span class="status-reorder">REORDER NOW</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Building status logic&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Column I should show status. If Stock &lt; Reorder Point: "REORDER NOW". If between 1× and 1.5× the Reorder Point: "LOW STOCK". Otherwise: "OK". Write the formula.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <strong>I2 — Status Flag:</strong>
+            <code>=IF(D2&lt;H2,"REORDER NOW",IF(D2&lt;H2*1.5,"LOW STOCK","OK"))</code>
+            Drag this down for all rows.
+            <br><br>
+            <strong>Summary of your current data:</strong>
+            <ul>
+              <li><strong>3 REORDER NOW</strong> — Luang Prabang (Red Bull, 1.3 days left, 2-day lead), Pakse (Mama Noodles, 0.8 days, 4-day lead!), Attapeu (Red Bull, 0.9 days, 5-day lead — <strong>CRITICAL</strong>)</li>
+              <li><strong>1 LOW STOCK</strong> — Vientiane Red Bull (1.3 days, but 1-day lead so manageable)</li>
+              <li><strong>1 OK</strong> — Savannakhet Pepsi (7.5 days of stock)</li>
+            </ul>
+            Attapeu Red Bull is the most urgent — stock runs out in under 1 day but restocking takes 5 days.
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about reorder priorities&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERT REPORT TAB -->
+  <div class="mockup-content" id="e2-report">
+    <div class="mockup-container stacked">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          Urgent_Reorders_2026-04-07.xlsx &mdash; Excel (Auto-generated by VBA macro)
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Home</div><div class="ribbon-tab">Data</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">A1</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">Jiffy Urgent Reorders — 2026-04-07 — 3 items need immediate action</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">E</th>
+                <th class="col-header">F</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">2</td>
+                <td>Product</td><td>Province</td><td>Branch</td><td>Current Stock</td><td>Days Left</td><td>Priority</td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td>Red Bull 150ml</td><td><strong>Attapeu</strong></td><td>Jiffy PTT ATP</td><td>8 units</td><td class="cell-critical">0.9 days</td>
+                <td><strong style="color:#C0392B;">🔴 CRITICAL</strong></td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td>Mama Noodles Pork</td><td><strong>Pakse</strong></td><td>Jiffy Pakse Main</td><td>18 units</td><td class="cell-critical">0.8 days</td>
+                <td><strong style="color:#C0392B;">🔴 CRITICAL</strong></td>
+              </tr>
+              <tr class="row-warning">
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td>Red Bull 150ml</td><td><strong>Luang Prabang</strong></td><td>Jiffy LP Talat</td><td>15 units</td><td style="background:#FFF8E1;font-weight:600;">1.3 days</td>
+                <td><strong style="color:#E67E22;">🟡 URGENT</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">VBA macro complete</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Write a VBA macro that: scans the Status column, copies all REORDER NOW rows to a new sheet "Urgent Reorders", adds today's date as header, highlights critical rows in red, and sorts by Days of Stock ascending.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            Here's your daily alert macro — paste in Alt+F11 → Insert Module:
+            <code>Sub JiffyReorderAlert()
+  Dim ws As Worksheet
+  Dim alertWs As Worksheet
+  Dim lastRow As Long
+  Dim i As Long, aRow As Long
+
+  Set ws = ThisWorkbook.Sheets("Inventory")
+  lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+  On Error Resume Next
+  Application.DisplayAlerts = False
+  ThisWorkbook.Sheets("Urgent Reorders").Delete
+  Application.DisplayAlerts = True
+
+  Set alertWs = ThisWorkbook.Sheets.Add
+  alertWs.Name = "Urgent Reorders"
+  alertWs.Range("A1").Value = _
+    "Jiffy Urgent Reorders — " &amp; _
+    Format(Date, "YYYY-MM-DD")
+  alertWs.Range("A1").Font.Bold = True
+
+  ws.Rows(1).Copy alertWs.Range("A2")
+  aRow = 3
+
+  For i = 2 To lastRow
+    If ws.Cells(i, 9).Value = "REORDER NOW" Then
+      ws.Rows(i).Copy alertWs.Range("A" &amp; aRow)
+      aRow = aRow + 1
+    End If
+  Next i
+
+  alertWs.Columns.AutoFit
+  alertWs.Sort.SortFields.Add _
+    Key:=alertWs.Range("E3"), Order:=xlAscending
+  MsgBox aRow - 3 &amp; " branches need reordering.", _
+    vbExclamation, "Jiffy Daily Alert"
+End Sub</code>
+            Run with Alt+F8 → JiffyReorderAlert each morning.
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about the macro&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big">5 provinces</div>
+      <div class="desc">Monitored simultaneously<br>with province-specific lead times</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">0 stockouts</div>
+      <div class="desc">With daily proactive alerts<br>replacing reactive calls</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">1 click</div>
+      <div class="desc">Generates the full reorder<br>priority list each morning</div>
+    </div>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="workflow-step" data-step="1">
+      <h4>Open Stock Master File</h4>
+      <p>Open the consolidated branch stock file. Claude reads all 33 branch rows, seeing stock levels, average daily sales, and province data.</p>
+    </div>
+    <div class="workflow-step" data-step="2">
+      <h4>Ask for Reorder Formulas</h4>
+      <p>Claude generates province-aware reorder point formulas that multiply safety stock by lead time — Attapeu gets 5× buffer, Vientiane gets 1×.</p>
+    </div>
+    <div class="workflow-step" data-step="3">
+      <h4>Get Status Flags</h4>
+      <p>One formula flags every row as REORDER NOW / LOW STOCK / OK. Conditional formatting colors the spreadsheet automatically.</p>
+    </div>
+    <div class="workflow-step" data-step="4">
+      <h4>Run Daily VBA Alert</h4>
+      <p>The macro extracts all urgent items to a clean report sheet, sorted by days of stock remaining. One click, every morning.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== EXAMPLE 3 ============================== -->
+<section class="section" id="example3">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <h2>LDC Group CEO Monthly Performance Dashboard</h2>
+    <p>Six subsidiaries, one consolidated view — with AI-generated strategic narrative</p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      Before: 2 days for CFO team to compile &nbsp;|&nbsp; After: Under 10 minutes
+    </div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scene-label">The Scenario</div>
+    <p>Each month, the LDC CEO needs a consolidated performance view across Jiffy, Zaap by B, SkyCool, CR Service, Gourmet, and the pre-launching Ants E-Commerce. Each unit's finance team sends a different Excel format. The CFO's team spends two days manually pulling numbers, reconciling formats, and writing a summary. With Claude, the CEO pastes in all six data sheets and asks for a consolidated dashboard and a strategic narrative — in one conversation, in minutes.</p>
+  </div>
+
+  <div class="mockup-tabs">
+    <div class="mockup-tab active" onclick="showTab('e3','raw')">Step 1: Raw Group Data</div>
+    <div class="mockup-tab" onclick="showTab('e3','consolidated')">Step 2: Consolidation</div>
+    <div class="mockup-tab" onclick="showTab('e3','narrative')">Step 3: CEO Narrative</div>
+  </div>
+
+  <!-- RAW DATA TAB -->
+  <div class="mockup-content active" id="e3-raw">
+    <div class="mockup-container">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          LDC_Group_Q1_2026_Raw.xlsx &mdash; Excel (6 sheets, one per subsidiary)
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Jiffy</div>
+          <div class="ribbon-tab">Zaap_by_B</div>
+          <div class="ribbon-tab">SkyCool</div>
+          <div class="ribbon-tab">CR_Service</div>
+          <div class="ribbon-tab">Gourmet</div>
+          <div class="ribbon-tab">Ants</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">B2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">12450000000</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B</th>
+                <th class="col-header">C</th>
+                <th class="col-header">D</th>
+                <th class="col-header">E</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Subsidiary</td>
+                <td>Q1 2026 Revenue (LAK)</td>
+                <td>Q1 Target (LAK)</td>
+                <td>Q1 2025 Actual (LAK)</td>
+                <td>Notes</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td><strong>Jiffy</strong></td>
+                <td>12,450,000,000</td>
+                <td>11,800,000,000</td>
+                <td>10,533,000,000</td>
+                <td>33 branches, 2 new openings</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td><strong>Zaap by B</strong></td>
+                <td>3,280,000,000</td>
+                <td>3,500,000,000</td>
+                <td>2,686,000,000</td>
+                <td class="cell-warning">LPB branch delay impacted</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td><strong>SkyCool</strong></td>
+                <td>8,920,000,000</td>
+                <td>8,000,000,000</td>
+                <td>6,790,000,000</td>
+                <td class="cell-highlight">Daikin pre-season surge</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td><strong>CR Service</strong></td>
+                <td>2,150,000,000</td>
+                <td>2,200,000,000</td>
+                <td>1,959,000,000</td>
+                <td>Contract renewals Q2</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td><strong>Gourmet</strong></td>
+                <td>1,870,000,000</td>
+                <td>1,900,000,000</td>
+                <td>1,908,000,000</td>
+                <td class="cell-error">Restaurant competition increased</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">7</td>
+                <td><strong>Ants E-Com</strong></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>Pre-launch — 2,400 merchant signups</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Reading 6 subsidiary sheets&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            I have Q1 2026 data for all 6 LDC subsidiaries in this workbook. Calculate: % vs target, % YoY change, and group totals. Then rank units by revenue contribution.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <strong>% vs Target (Col F):</strong>
+            <code>=((B2-C2)/C2)*100</code>
+            <strong>% YoY Change (Col G):</strong>
+            <code>=((B2-D2)/D2)*100</code>
+            <strong>Revenue Contribution % (Col H):</strong>
+            <code>=B2/SUM($B$2:$B$7)*100</code>
+            <br>
+            <strong>Group Total Q1 Revenue:</strong> 28,670,000,000 LAK (~USD 1.33M)<br><br>
+            <strong>Ranked by revenue:</strong>
+            <ul>
+              <li>1. Jiffy — 43.4% of group</li>
+              <li>2. SkyCool — 31.1%</li>
+              <li>3. Zaap by B — 11.4%</li>
+              <li>4. CR Service — 7.5%</li>
+              <li>5. Gourmet — 6.5%</li>
+              <li>6. Ants — 0% (pre-launch)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about group performance&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSOLIDATED TAB -->
+  <div class="mockup-content" id="e3-consolidated">
+    <div class="mockup-container stacked">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          LDC_Group_Q1_2026_Dashboard.xlsx &mdash; Excel (New consolidated sheet)
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">Group Dashboard</div>
+          <div class="ribbon-tab">Jiffy Detail</div>
+          <div class="ribbon-tab">SkyCool Detail</div>
+          <div class="ribbon-tab">All Units</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">C2</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">=((B2-D2)/D2)*100</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <thead>
+              <tr>
+                <th class="row-num"></th>
+                <th class="col-header">A</th>
+                <th class="col-header">B (Rev, LAK B)</th>
+                <th class="col-header" style="background:#E3F2FD;">C (vs Target)</th>
+                <th class="col-header" style="background:#E3F2FD;">D (vs LY)</th>
+                <th class="col-header" style="background:#E3F2FD;">E (Group %)</th>
+                <th class="col-header" style="background:#E3F2FD;">F (Signal)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="header-row">
+                <td style="text-align:center;background:#F0F0F0;color:#888">1</td>
+                <td>Business Unit</td>
+                <td>Q1 2026 Revenue</td>
+                <td class="cell-formula">vs Target %</td>
+                <td class="cell-formula">YoY Growth %</td>
+                <td class="cell-formula">Group Share %</td>
+                <td class="cell-formula">CEO Signal</td>
+              </tr>
+              <tr class="row-ok">
+                <td style="text-align:center;background:#F8F8F8;color:#999">2</td>
+                <td><strong>Jiffy</strong></td>
+                <td>12.45B</td>
+                <td class="cell-highlight">+5.5%</td>
+                <td class="cell-highlight">+18.2%</td>
+                <td>43.4%</td>
+                <td>&#x1F7E2; On Track</td>
+              </tr>
+              <tr class="row-warning">
+                <td style="text-align:center;background:#F8F8F8;color:#999">3</td>
+                <td><strong>Zaap by B</strong></td>
+                <td>3.28B</td>
+                <td class="cell-warning">&#x2212;6.3%</td>
+                <td class="cell-highlight">+22.1%</td>
+                <td>11.4%</td>
+                <td>&#x1F7E1; Watch</td>
+              </tr>
+              <tr class="row-ok">
+                <td style="text-align:center;background:#F8F8F8;color:#999">4</td>
+                <td><strong>SkyCool</strong></td>
+                <td>8.92B</td>
+                <td class="cell-highlight">+11.5%</td>
+                <td class="cell-highlight">+31.4%</td>
+                <td>31.1%</td>
+                <td>&#x1F7E2; Star Performer</td>
+              </tr>
+              <tr class="row-warning">
+                <td style="text-align:center;background:#F8F8F8;color:#999">5</td>
+                <td><strong>CR Service</strong></td>
+                <td>2.15B</td>
+                <td class="cell-warning">&#x2212;2.3%</td>
+                <td class="cell-highlight">+9.7%</td>
+                <td>7.5%</td>
+                <td>&#x1F7E1; Watch</td>
+              </tr>
+              <tr class="row-danger">
+                <td style="text-align:center;background:#F8F8F8;color:#999">6</td>
+                <td><strong>Gourmet</strong></td>
+                <td>1.87B</td>
+                <td class="cell-warning">&#x2212;1.6%</td>
+                <td class="cell-error">&#x2212;2.1%</td>
+                <td>6.5%</td>
+                <td>&#x1F534; Action Needed</td>
+              </tr>
+              <tr>
+                <td style="text-align:center;background:#F8F8F8;color:#999">7</td>
+                <td><strong>Ants E-Com</strong></td>
+                <td>—</td>
+                <td>Pre-Launch</td>
+                <td>Pre-Launch</td>
+                <td>—</td>
+                <td>2,400 merchants signed</td>
+              </tr>
+              <tr style="background:#F5F5F5;font-weight:700;border-top:2px solid #999">
+                <td style="text-align:center;background:#F0F0F0;color:#888">8</td>
+                <td><strong>GROUP TOTAL</strong></td>
+                <td><strong>28.67B</strong></td>
+                <td class="cell-highlight"><strong>+5.2%</strong></td>
+                <td class="cell-highlight"><strong>+20.8%</strong></td>
+                <td>100%</td>
+                <td>&#x1F7E2; Strong Q1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Building dashboard&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Now add a CEO Signal column. Green = on/above target AND positive YoY. Yellow = above YoY but missed target OR below 5% YoY growth. Red = negative YoY. Write the formula.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <strong>F2 — CEO Signal:</strong>
+            <code>=IF(AND(C2&gt;=0,D2&gt;=0),"🟢 On Track",IF(OR(D2&lt;0,C2&lt;-10),"🔴 Action Needed","🟡 Watch"))</code>
+            <br>
+            <strong>Result across your units:</strong>
+            <ul>
+              <li>&#x1F7E2; <strong>Jiffy</strong> +5.5% vs target, +18.2% YoY</li>
+              <li>&#x1F7E2; <strong>SkyCool</strong> +11.5% vs target, +31.4% YoY — star performer</li>
+              <li>&#x1F7E1; <strong>Zaap by B</strong> missed target but strong YoY growth</li>
+              <li>&#x1F7E1; <strong>CR Service</strong> marginally below target</li>
+              <li>&#x1F534; <strong>Gourmet</strong> only unit with negative YoY — needs review</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about the dashboard&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NARRATIVE TAB -->
+  <div class="mockup-content" id="e3-narrative">
+    <div class="mockup-container stacked">
+      <div class="excel-panel">
+        <div class="excel-titlebar">
+          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          LDC_CEO_Brief_Q1_2026.xlsx &mdash; Excel
+        </div>
+        <div class="excel-ribbon">
+          <div class="ribbon-tab active">CEO Brief</div><div class="ribbon-tab">Group Dashboard</div>
+        </div>
+        <div class="formula-bar">
+          <span class="cell-ref">A1</span>
+          <span class="fx">fx</span>
+          <span class="formula-text">LDC Group — Q1 2026 CEO Strategic Brief — Generated by Claude Cowork</span>
+        </div>
+        <div class="excel-grid">
+          <table>
+            <tbody>
+              <tr class="header-row">
+                <td colspan="2" style="padding:12px;font-size:14px;background:#1A3A6B;color:#fff;">LDC Group Q1 2026 — CEO Strategic Brief (Claude Cowork Generated)</td>
+              </tr>
+              <tr>
+                <td style="width:120px;font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Group Revenue</td>
+                <td style="padding:8px 12px;font-size:12px;">28.67B LAK &nbsp;|&nbsp; <strong style="color:#2E7D4F">+20.8% YoY</strong> &nbsp;|&nbsp; <strong style="color:#2E7D4F">+5.2% vs Q1 Target</strong></td>
+              </tr>
+              <tr>
+                <td style="font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Star Performer</td>
+                <td style="padding:8px 12px;font-size:12px;background:#E8F5E9;"><strong>SkyCool</strong> — Beat target by 11.5%, grew 31.4% YoY. Daikin AC demand ahead of peak cooling season. Recommend Q2 inventory build-up before May.</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Watch Item</td>
+                <td style="padding:8px 12px;font-size:12px;background:#FFF8E1;"><strong>Zaap by B</strong> — Strong YoY growth (+22.1%) but missed Q1 target by 6.3%. Root cause: Luang Prabang branch opening delay reduced distribution reach. Target recovery in Q2 when 2 new Jiffy locations begin stocking Zaap products.</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Action Required</td>
+                <td style="padding:8px 12px;font-size:12px;background:#FDEDEC;"><strong>Gourmet</strong> — Only unit with negative YoY (-2.1%). Increased restaurant competition in Vientiane. Recommend activating hotel/restaurant B2B pipeline and leveraging Ants E-Commerce for Gourmet delivery once platform launches.</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Strategic Opportunity</td>
+                <td style="padding:8px 12px;font-size:12px;background:#E3F2FD;"><strong>Ants E-Commerce</strong> — 2,400 merchant signups pre-launch. This positions LDC to capture marketplace GMV from existing Gourmet and Jiffy supplier relationships. Ants launch could add 15–20B LAK in GMV in Year 1.</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700;background:#F5F5F5;padding:8px 12px;font-size:12px;">Q2 Priorities</td>
+                <td style="padding:8px 12px;font-size:12px;">1. SkyCool: Build AC inventory ahead of hot season &nbsp; 2. Zaap: Activate 2 new Jiffy distribution points &nbsp; 3. Gourmet: Launch B2B hotel outreach campaign &nbsp; 4. Ants: Finalize launch checklist</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="claude-sidebar">
+        <div class="sidebar-header">
+          <div class="claude-logo">C</div>
+          <div><div class="sidebar-title">Claude</div><div class="sidebar-subtitle">Writing CEO brief&hellip;</div></div>
+        </div>
+        <div class="sidebar-chat">
+          <div class="chat-msg user">
+            Based on this group dashboard, write a CEO strategic brief for Q1 2026. Include: overall performance summary, the star performer, what needs watching, one action item, and strategic priorities for Q2. Write it for a CEO who reads quickly.
+          </div>
+          <div class="chat-msg claude">
+            <div class="label">Claude</div>
+            <strong>LDC Group Q1 2026 — CEO Strategic Brief</strong>
+            <br><br>
+            <strong>Headline:</strong> Group revenue 28.67B LAK, up 20.8% YoY and 5.2% above target — a strong quarter.
+            <br><br>
+            <strong>SkyCool is your Q1 story.</strong> +31.4% YoY, beat target by 11.5%. Daikin AC demand is accelerating ahead of the April–May cooling season. Action: build AC inventory now before competitors do.
+            <br><br>
+            <strong>Gourmet needs attention.</strong> Only unit down YoY (-2.1%). Vientiane restaurant competition has intensified. The Ants platform is your best Q2 lever — Gourmet delivery through Ants can recover lost dine-in revenue through delivery channels.
+            <br><br>
+            <strong>Ants: 2,400 merchants already signed.</strong> The pre-launch momentum is real. A successful launch converts LDC into a platform business — not just retail.
+          </div>
+        </div>
+        <div class="sidebar-input">
+          <div class="input-fake">Ask about Q2 strategy&hellip;<div class="send-btn"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big">6 units</div>
+      <div class="desc">Consolidated from separate<br>sheets into one view</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">10 min</div>
+      <div class="desc">vs. 2 days of manual<br>CFO team compilation</div>
+    </div>
+    <div class="impact-item">
+      <div class="big">1 brief</div>
+      <div class="desc">With strategic narrative the<br>CEO can act on immediately</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== USE CASES BY UNIT ============================== -->
+<section class="section" id="usecases">
+  <div class="section-header">
+    <div class="section-number">+</div>
+    <h2>More Ways LDC Teams Use Claude Cowork Daily</h2>
+    <p>Every department in every subsidiary has prompts ready to use — no training required</p>
+  </div>
+
+  <div class="use-cases-grid">
+    <div class="use-case-card">
+      <div class="use-case-unit">🏪 Jiffy Retail</div>
+      <h4>Fast-Moving SKU Analysis</h4>
+      <p>Identify which 20 SKUs drive 80% of Jiffy revenue across all provinces — and which slow movers are taking up shelf space.</p>
+      <div class="use-case-prompt">Show me a Pareto analysis of SKU revenue for Q1 across all Jiffy branches. Which products should I prioritize for shelf space negotiation with suppliers?</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">🥐 Zaap by B</div>
+      <h4>Daily Food Production Planning</h4>
+      <p>Reduce waste by forecasting how many sandwiches and meals to produce per location based on yesterday's sell-through rates.</p>
+      <div class="use-case-prompt">Based on last week's sell-through rates per Jiffy location, calculate the recommended production quantities for tomorrow. Flag any location with consistent waste over 20%.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">❄️ SkyCool</div>
+      <h4>Dealer Performance Ranking</h4>
+      <p>Rank 100+ authorized Daikin dealers by sales vs target, identify underperformers, and generate dealer review notes automatically.</p>
+      <div class="use-case-prompt">Rank all dealers by Q1 sales vs target. For the bottom 20%, write one sentence for each explaining their gap and suggesting whether to place them on a performance plan.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">🔧 CR Service</div>
+      <h4>Maintenance Contract Renewal Tracker</h4>
+      <p>Flag all B2B service contracts expiring in the next 60 days, estimate renewal value, and draft the renewal reminder email.</p>
+      <div class="use-case-prompt">Which service contracts expire in the next 60 days? Sort by contract value descending. Then draft a renewal reminder email I can send to each client.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">🍽️ Gourmet</div>
+      <h4>Ingredient Cost Analysis (COGS)</h4>
+      <p>Track food cost percentage by menu item, flag dishes where COGS exceeds 35%, and suggest pricing or recipe adjustments.</p>
+      <div class="use-case-prompt">Calculate food cost % for each menu item (ingredient cost ÷ selling price). Flag any item where COGS exceeds 35% and suggest whether to reprice or reduce portion size.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">🛒 Ants E-Commerce</div>
+      <h4>Merchant Onboarding Tracker</h4>
+      <p>Track the status of 2,400+ merchant sign-ups across onboarding stages, forecast GMV contribution by merchant tier.</p>
+      <div class="use-case-prompt">Segment our 2,400 registered merchants into tiers based on their product catalog size and projected monthly GMV. Which tier should the launch team focus on first?</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">📦 Distribution Center</div>
+      <h4>Province Delivery Route Optimization</h4>
+      <p>Given orders from branches across 6 provinces, build an optimized delivery schedule that minimizes empty return runs.</p>
+      <div class="use-case-prompt">I have orders from 12 branches across 4 provinces due this week. Group them into delivery routes by province that minimize total truck-days. Show me a schedule table.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">💼 HR &amp; Training</div>
+      <h4>Staff Performance Summary</h4>
+      <p>Compile quarterly staff KPI data across departments, flag outliers, and generate coaching notes for line managers.</p>
+      <div class="use-case-prompt">Review the Q1 KPI scores for all 400 staff. Identify the top 10% and bottom 10%. For the bottom 10%, write a one-sentence coaching focus for each person's line manager.</div>
+    </div>
+    <div class="use-case-card">
+      <div class="use-case-unit">📊 Finance &amp; Accounting</div>
+      <h4>Multi-Subsidiary P&amp;L Reconciliation</h4>
+      <p>Spot inter-company revenue that's double-counted across subsidiaries, and flag variance anomalies before month-close.</p>
+      <div class="use-case-prompt">Compare the P&amp;L submissions from all 6 subsidiaries. Identify any inter-company revenue that appears on both sides. Flag cells where this month's variance exceeds 15% from last month without an explanation note.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CTA ============================== -->
+<section class="cta-section">
+  <h2>Ready to Bring Claude Cowork to <span>LDC's 400+ Staff</span>?</h2>
+  <p>A two-day hands-on workshop builds these skills across every department — with real LDC data, real scenarios, and results from day one.</p>
+  <div class="cta-agenda">
+    <div class="cta-day">
+      <h4>Day 1 — Operations &amp; Excel Automation</h4>
+      <ul>
+        <li>Claude Cowork setup across all teams</li>
+        <li>Jiffy branch data consolidation (live)</li>
+        <li>Inventory reorder automation with VBA</li>
+        <li>Sales formula building for Jiffy, SkyCool, CR Service</li>
+        <li>Data cleanup workflows for daily POS exports</li>
+      </ul>
+    </div>
+    <div class="cta-day">
+      <h4>Day 2 — Business Intelligence &amp; Strategy</h4>
+      <ul>
+        <li>Group CEO dashboard construction</li>
+        <li>Zaap by B food production demand forecasting</li>
+        <li>SkyCool dealer performance analytics</li>
+        <li>Gourmet COGS and menu pricing analysis</li>
+        <li>Ants E-Commerce merchant analytics &amp; GMV modeling</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cta-buttons">
+    <a href="#example1" class="cta-btn primary">&#x21BA; Replay the Demos</a>
+    <a href="#" class="cta-btn secondary">Request the LDC Workshop Proposal</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<div class="footer">
+  Claude Cowork &times; LDC Import-Export Group &nbsp;&bull;&nbsp; Prepared by Claude Cowork Team &nbsp;&bull;&nbsp; April 2026<br>
+  All revenue figures and scenarios are illustrative examples for demonstration purposes.
+</div>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+  function showTab(section, tab) {
+    // hide all content panels for this section
+    const contents = document.querySelectorAll('[id^="' + section + '-"]');
+    contents.forEach(function(c) { c.classList.remove('active'); });
+
+    // deactivate all tabs in the nearest .mockup-tabs
+    const activeContent = document.getElementById(section + '-' + tab);
+    if (!activeContent) return;
+
+    const tabsContainer = activeContent.closest('.section').querySelector('.mockup-tabs');
+    if (tabsContainer) {
+      tabsContainer.querySelectorAll('.mockup-tab').forEach(function(t) { t.classList.remove('active'); });
+      // find the tab that triggers this section-tab combo
+      tabsContainer.querySelectorAll('.mockup-tab').forEach(function(t) {
+        if (t.getAttribute('onclick') && t.getAttribute('onclick').indexOf("'" + section + "','" + tab + "'") !== -1) {
+          t.classList.add('active');
+        }
+      });
+    }
+    activeContent.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
