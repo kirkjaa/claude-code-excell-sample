@@ -581,6 +581,151 @@
 
   .footer { text-align: center; padding: 32px 40px; font-size: 12px; color: var(--ink-muted); background: var(--beige); }
 
+  /* ============ CURRICULUM SECTION ============ */
+  .curriculum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .curr-card {
+    background: var(--white);
+    border: 1px solid var(--beige-dark);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.2s;
+    overflow: hidden;
+  }
+  .curr-card:hover {
+    border-color: var(--terra);
+    box-shadow: 0 4px 16px rgba(217,119,87,0.12);
+    transform: translateY(-2px);
+  }
+  .curr-card .mod-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--terra);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .curr-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .curr-card p {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .curr-card .ldc-tag {
+    display: inline-block;
+    background: rgba(217,119,87,0.1);
+    color: var(--terra-dark);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .curr-card .time-tag {
+    display: inline-block;
+    background: var(--success-bg);
+    color: var(--success);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+  .curriculum-banner {
+    background: linear-gradient(135deg, #0D1B35 0%, #1A3A6B 50%, #2A2830 100%);
+    color: var(--white);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .curriculum-banner::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,87,0.15) 0%, transparent 70%);
+  }
+  .curriculum-banner h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .curriculum-banner h3 span { color: var(--terra-light); }
+  .curriculum-banner p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    max-width: 600px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+  .curriculum-banner .banner-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .curriculum-banner .bstat {
+    text-align: center;
+  }
+  .curriculum-banner .bstat .num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--terra-light);
+  }
+  .curriculum-banner .bstat .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+  }
+  .preview-prompt {
+    background: #1E1E2A;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 12px 0 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #D4D4D4;
+  }
+  .preview-prompt .prompt-label {
+    color: var(--terra-light);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    display: block;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .preview-prompt .prompt-text { color: #9CDCFE; }
+
   .scenario-box {
     background: var(--white);
     border-left: 4px solid var(--terra);
@@ -774,6 +919,10 @@
     <a href="#example3" class="nav-link hide-sm">
       <span class="en">Inventory Alerts</span>
       <span class="th">แจ้งเตือนสต็อก</span>
+    </a>
+    <a href="#curriculum" class="nav-link">
+      <span class="en">Curriculum</span>
+      <span class="th">หลักสูตร</span>
     </a>
     <div class="nav-divider"></div>
     <a href="ldc-demo.html" class="nav-cta-link">
@@ -1482,6 +1631,276 @@
   <div class="exec-quote">
     <p><span class="en">We went from spending 30 minutes every morning eyeballing stock levels to running a one-click macro that highlights every critical item in 10 seconds. Claude didn't just write the formula&mdash;it built the entire alert system, including the VBA automation, in a single conversation.</span><span class="th">เราเปลี่ยนจากการใช้เวลา 30 นาทีทุกเช้าดูระดับสต็อกด้วยตา มาเป็นการรัน macro คลิกเดียวที่ไฮไลท์ทุกรายการวิกฤตใน 10 วินาที Claude ไม่ได้แค่เขียนสูตร&mdash;แต่สร้างระบบแจ้งเตือนทั้งหมด รวมถึง VBA อัตโนมัติ ในการสนทนาครั้งเดียว</span></p>
     <div class="attribution"><span class="en">&mdash; The value proposition for inventory management teams</span><span class="th">&mdash; คุณค่าสำหรับทีมจัดการสินค้าคงคลัง</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================== CURRICULUM ============================== -->
+<section class="section" id="curriculum">
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <h2>
+      <span class="en">Excel Automation Curriculum</span>
+      <span class="th">หลักสูตรอัตโนมัติ Excel</span>
+    </h2>
+    <p>
+      <span class="en">10-module practical training program — from file conversion to PDF reports, all powered by plain English prompts</span>
+      <span class="th">หลักสูตรฝึกปฏิบัติ 10 โมดูล — ตั้งแต่การแปลงไฟล์ถึงรายงาน PDF ทั้งหมดด้วยคำสั่งภาษาอังกฤษง่ายๆ</span>
+    </p>
+    <div class="time-pill">
+      <span class="clock">&#9201;</span>
+      <span class="en">Half-day workshop &nbsp;|&nbsp; 10 modules &nbsp;|&nbsp; LDC-tailored exercises</span>
+      <span class="th">เวิร์กช็อปครึ่งวัน &nbsp;|&nbsp; 10 โมดูล &nbsp;|&nbsp; แบบฝึกหัดเฉพาะ LDC</span>
+    </div>
+  </div>
+
+  <div class="curriculum-banner">
+    <h3>
+      <span class="en">From Zero to <span>Automation Pro</span> in 4 Hours</span>
+      <span class="th">จากศูนย์สู่<span>มืออาชีพด้านอัตโนมัติ</span>ใน 4 ชั่วโมง</span>
+    </h3>
+    <p>
+      <span class="en">Based on the proven 10-step Excel automation framework, customized with real LDC Group scenarios across Jiffy, SkyCool, Zaap, Gourmet, CR Service, and Ants E-Commerce.</span>
+      <span class="th">อิงจากกรอบการทำงานอัตโนมัติ Excel 10 ขั้นตอนที่พิสูจน์แล้ว ปรับแต่งด้วยสถานการณ์จริงของ LDC Group ทั้ง Jiffy, SkyCool, Zaap, Gourmet, CR Service และ Ants E-Commerce</span>
+    </p>
+    <div class="banner-stats">
+      <div class="bstat">
+        <div class="num">10</div>
+        <div class="lbl"><span class="en">Modules</span><span class="th">โมดูล</span></div>
+      </div>
+      <div class="bstat">
+        <div class="num">20+</div>
+        <div class="lbl"><span class="en">Prompt Templates</span><span class="th">เทมเพลตพรอมต์</span></div>
+      </div>
+      <div class="bstat">
+        <div class="num">6</div>
+        <div class="lbl"><span class="en">LDC Business Units</span><span class="th">หน่วยธุรกิจ LDC</span></div>
+      </div>
+      <div class="bstat">
+        <div class="num">4 hrs</div>
+        <div class="lbl"><span class="en">Total Duration</span><span class="th">ระยะเวลาทั้งหมด</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="curriculum-grid">
+
+    <div class="curr-card">
+      <div class="mod-num">1</div>
+      <h4>
+        <span class="en">Convert Any File to Excel</span>
+        <span class="th">แปลงไฟล์ใดๆ เป็น Excel</span>
+      </h4>
+      <p>
+        <span class="en">CSVs, text files, PDFs, Word docs &mdash; transform any format into a clean, structured spreadsheet in minutes.</span>
+        <span class="th">CSV, ไฟล์ข้อความ, PDF, Word &mdash; แปลงรูปแบบใดๆ ให้เป็นสเปรดชีทที่สะอาดและมีโครงสร้างในไม่กี่นาที</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Jiffy POS exports</span><span class="th">ข้อมูล POS จาก Jiffy</span></span>
+      <span class="time-tag">20 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Take this CSV and turn it into a clean formatted Excel spreadsheet with proper headers."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">2</div>
+      <h4>
+        <span class="en">Understand Inherited Spreadsheets</span>
+        <span class="th">เข้าใจสเปรดชีทที่ได้รับมา</span>
+      </h4>
+      <p>
+        <span class="en">Get plain-English explanations of formulas, detect hardcoded values, and map sheet dependencies.</span>
+        <span class="th">รับคำอธิบายภาษาง่ายๆ ของสูตร ตรวจจับค่าที่ฮาร์ดโค้ด และแผนที่การเชื่อมต่อชีท</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Finance handovers</span><span class="th">การส่งมอบงานการเงิน</span></span>
+      <span class="time-tag">20 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"I just inherited this spreadsheet. Explain what it does and flag anything risky."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">3</div>
+      <h4>
+        <span class="en">Find &amp; Fix Errors Automatically</span>
+        <span class="th">ค้นหาและแก้ไขข้อผิดพลาดอัตโนมัติ</span>
+      </h4>
+      <p>
+        <span class="en">Detect duplicates, invalid dates, negative values, math errors &mdash; then fix them all with one follow-up prompt.</span>
+        <span class="th">ตรวจจับรายการซ้ำ วันที่ไม่ถูกต้อง ค่าติดลบ ข้อผิดพลาดคณิตศาสตร์ &mdash; แล้วแก้ไขทั้งหมดด้วยพรอมต์ครั้งเดียว</span>
+      </p>
+      <span class="ldc-tag"><span class="en">SkyCool billing audit</span><span class="th">ตรวจสอบบิล SkyCool</span></span>
+      <span class="time-tag">25 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Review this spreadsheet and flag anything that looks like an error or red flag."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">4</div>
+      <h4>
+        <span class="en">Clean Messy Data at Scale</span>
+        <span class="th">ทำความสะอาดข้อมูลยุ่งเหยิงขนาดใหญ่</span>
+      </h4>
+      <p>
+        <span class="en">Standardize names, emails, phones, dates, provinces &mdash; Claude asks how you want ambiguous cases handled.</span>
+        <span class="th">มาตรฐานชื่อ อีเมล โทรศัพท์ วันที่ จังหวัด &mdash; Claude ถามว่าคุณต้องการจัดการกรณีที่ไม่ชัดเจนอย่างไร</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Ants merchant database</span><span class="th">ฐานข้อมูลร้านค้า Ants</span></span>
+      <span class="time-tag">25 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Clean up this spreadsheet. Standardize all formatting and fix capitalization."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">5</div>
+      <h4>
+        <span class="en">Write Formulas in Plain English</span>
+        <span class="th">เขียนสูตรด้วยภาษาง่ายๆ</span>
+      </h4>
+      <p>
+        <span class="en">Profit margins, running totals, tiered commissions, date math &mdash; describe it, Claude writes the formula.</span>
+        <span class="th">อัตรากำไร ยอดรวมสะสม ค่าคอมมิชชั่นแบบขั้นบันได คณิตศาสตร์วันที่ &mdash; อธิบาย แล้ว Claude เขียนสูตร</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Jiffy product margins</span><span class="th">อัตรากำไรสินค้า Jiffy</span></span>
+      <span class="time-tag">30 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Add a commission column. 8% under 5K, 10% for 5-10K, 12% above."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">6</div>
+      <h4>
+        <span class="en">Summarize Across Multiple Sheets</span>
+        <span class="th">สรุปข้ามหลายชีท</span>
+      </h4>
+      <p>
+        <span class="en">Pull data from regional/branch sheets into one auto-updating summary &mdash; no manual copy-paste.</span>
+        <span class="th">ดึงข้อมูลจากชีทสาขา/ภูมิภาคมารวมในสรุปที่อัปเดตอัตโนมัติ &mdash; ไม่ต้องคัดลอกวาง</span>
+      </p>
+      <span class="ldc-tag"><span class="en">33 Jiffy branches</span><span class="th">33 สาขา Jiffy</span></span>
+      <span class="time-tag">20 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Create a summary sheet pulling totals from each regional sheet."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">7</div>
+      <h4>
+        <span class="en">Analyze Data &amp; Generate Insights</span>
+        <span class="th">วิเคราะห์ข้อมูลและสร้างข้อมูลเชิงลึก</span>
+      </h4>
+      <p>
+        <span class="en">Trends, top performers, day-of-week patterns, executive summaries &mdash; insights you didn't know to ask for.</span>
+        <span class="th">แนวโน้ม ผู้มีผลงานสูงสุด รูปแบบตามวันในสัปดาห์ สรุปผู้บริหาร &mdash; ข้อมูลเชิงลึกที่คุณไม่รู้ว่าต้องถาม</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Gourmet client analysis</span><span class="th">วิเคราะห์ลูกค้า Gourmet</span></span>
+      <span class="time-tag">30 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Write a 3-sentence executive summary I can paste into Slack."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">8</div>
+      <h4>
+        <span class="en">Create Charts &amp; Dashboards</span>
+        <span class="th">สร้างแผนภูมิและแดชบอร์ด</span>
+      </h4>
+      <p>
+        <span class="en">Bar charts, line charts, conditional formatting, color scales, and full KPI dashboards from prompts.</span>
+        <span class="th">แผนภูมิแท่ง แผนภูมิเส้น การจัดรูปแบบตามเงื่อนไข สเกลสี และแดชบอร์ด KPI จากพรอมต์</span>
+      </p>
+      <span class="ldc-tag"><span class="en">CEO monthly dashboard</span><span class="th">แดชบอร์ดรายเดือน CEO</span></span>
+      <span class="time-tag">25 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Create a dashboard with key metrics at a glance."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">9</div>
+      <h4>
+        <span class="en">Format Professionally</span>
+        <span class="th">จัดรูปแบบอย่างมืออาชีพ</span>
+      </h4>
+      <p>
+        <span class="en">Turn ugly data dumps into client-ready, board-ready spreadsheets with one prompt.</span>
+        <span class="th">เปลี่ยนข้อมูลดิบให้เป็นสเปรดชีทพร้อมนำเสนอลูกค้าหรือคณะกรรมการด้วยพรอมต์เดียว</span>
+      </p>
+      <span class="ldc-tag"><span class="en">SkyCool client quotes</span><span class="th">ใบเสนอราคาลูกค้า SkyCool</span></span>
+      <span class="time-tag">15 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Make this spreadsheet look professional and presentable."</span>
+      </div>
+    </div>
+
+    <div class="curr-card">
+      <div class="mod-num">10</div>
+      <h4>
+        <span class="en">Export to PDF &amp; Other Formats</span>
+        <span class="th">ส่งออกเป็น PDF และรูปแบบอื่น</span>
+      </h4>
+      <p>
+        <span class="en">Transform finished spreadsheets into PDF reports with titles, executive summaries, and data tables.</span>
+        <span class="th">แปลงสเปรดชีทที่เสร็จแล้วเป็นรายงาน PDF พร้อมหัวเรื่อง สรุปผู้บริหาร และตารางข้อมูล</span>
+      </p>
+      <span class="ldc-tag"><span class="en">Board quarterly PDF</span><span class="th">PDF รายไตรมาสคณะกรรมการ</span></span>
+      <span class="time-tag">15 min</span>
+      <div class="preview-prompt">
+        <span class="prompt-label"><span class="en">Sample Prompt</span><span class="th">ตัวอย่างพรอมต์</span></span>
+        <span class="prompt-text">"Turn this into a formatted PDF report with title and executive summary."</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="exec-quote">
+    <p>
+      <span class="en">This curriculum takes what used to be weeks of Excel training and compresses it into 4 hours of hands-on practice. Staff don't memorize formulas &mdash; they learn to describe what they need. The AI handles the syntax. The human handles the judgment.</span>
+      <span class="th">หลักสูตรนี้บีบอัดสิ่งที่เคยใช้เวลาหลายสัปดาห์ในการฝึกอบรม Excel ให้เหลือ 4 ชั่วโมงของการฝึกปฏิบัติ พนักงานไม่ต้องจำสูตร &mdash; แค่เรียนรู้วิธีอธิบายสิ่งที่ต้องการ AI จัดการไวยากรณ์ มนุษย์จัดการวิจารณญาณ</span>
+    </p>
+    <div class="attribution">
+      <span class="en">&mdash; Claude Cowork Excel Automation Training Program for LDC Group</span>
+      <span class="th">&mdash; โปรแกรมฝึกอบรม Claude Cowork Excel Automation สำหรับ LDC Group</span>
+    </div>
+  </div>
+
+  <div class="impact-box">
+    <div class="impact-item">
+      <div class="big">10</div>
+      <div class="desc">
+        <span class="en">Practical modules<br>with live exercises</span>
+        <span class="th">โมดูลปฏิบัติ<br>พร้อมแบบฝึกหัดสด</span>
+      </div>
+    </div>
+    <div class="impact-item">
+      <div class="big">4 hrs</div>
+      <div class="desc">
+        <span class="en">Total training time<br>half-day format</span>
+        <span class="th">เวลาฝึกอบรมทั้งหมด<br>รูปแบบครึ่งวัน</span>
+      </div>
+    </div>
+    <div class="impact-item">
+      <div class="big">Zero</div>
+      <div class="desc">
+        <span class="en">Prior Excel expertise<br>required to start</span>
+        <span class="th">ไม่ต้องมีความเชี่ยวชาญ<br>Excel ก่อนเริ่ม</span>
+      </div>
+    </div>
   </div>
 </section>
 
