@@ -5,7 +5,13 @@
       "WebSearch",
       "WebFetch(domain:github.com)",
       "Bash(gh api *)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(where.exe pandoc *)",
+      "Bash(pandoc --version)",
+      "Bash(where.exe python *)",
+      "Bash(where.exe py *)",
+      "Bash(py --version)",
+      "Bash(python *)"
     ]
   }
 }
